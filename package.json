@@ -6,7 +6,9 @@
     "dev": "concurrently \"next dev\" \"wait-on http://localhost:3000 && open-cli http://localhost:3000\"",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:generate": "node --env-file=.env node_modules/drizzle-kit/bin.cjs generate",
+    "db:migrate": "node --env-file=.env node_modules/drizzle-kit/bin.cjs migrate"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
