@@ -3,8 +3,9 @@
 A self-hosted personal dashboard to organize and track the things I care about: tasks,
 goals, time, workouts, and nutrition, in one place, accessible from any device.
 
-> Status: Early setup. Stack and project conventions are decided; app scaffolding
-> is the next step. See the [Roadmap](#roadmap).
+> Status: Scaffolded. The Next.js 16 app, base layout, dashboard shell, and section
+> navigation are in place and building clean. The data layer (Postgres, Drizzle, auth)
+> is next. See the [Roadmap](#roadmap).
 
 ## Goals
 
@@ -26,7 +27,7 @@ goals, time, workouts, and nutrition, in one place, accessible from any device.
 
 | Layer | Choice | Why |
 | --- | --- | --- |
-| Framework | [Next.js 15](https://nextjs.org/) (App Router) + React 19 | UI and API routes/server actions in one codebase. |
+| Framework | [Next.js 16](https://nextjs.org/) (App Router) + React 19 | UI and API routes/server actions in one codebase. |
 | Language | [TypeScript](https://www.typescriptlang.org/) | Type safety across the stack. |
 | Styling | [Tailwind CSS](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/) | Fast, polished, fully-owned components. |
 | Database | [PostgreSQL](https://www.postgresql.org/) via [Neon](https://neon.tech/) | Serverless Postgres that pairs cleanly with Vercel. |
@@ -40,24 +41,23 @@ goals, time, workouts, and nutrition, in one place, accessible from any device.
 
 ## Getting Started
 
-> Not yet scaffolded. These steps will be filled in once the Next.js app is created.
-
 ```bash
-# Coming soon
 pnpm install
 pnpm dev
 ```
 
+Then open [http://localhost:3000](http://localhost:3000).
+
 ## Roadmap
 
-- [ ] Phase 0, Foundation (in progress): stack decision, README, `.gitignore`, project conventions.
-- [ ] Phase 1, Scaffold: Next.js + TypeScript + Tailwind + shadcn/ui, base layout, dashboard shell.
-- [ ] Phase 2, Data layer: Neon Postgres, Drizzle schema and migrations, Auth.js single-user login.
+- [x] Phase 0, Foundation: stack decision, README, `.gitignore`, project conventions.
+- [x] Phase 1, Scaffold: Next.js + TypeScript + Tailwind + shadcn/ui, base layout, dashboard shell.
+- [ ] Phase 2, Data layer (next): Neon Postgres, Drizzle schema and migrations, Auth.js single-user login.
 - [ ] Phase 3, To-do and goals: first vertical slice end-to-end.
 - [ ] Phase 4, Time tracking.
 - [ ] Phase 5, Gym and workouts.
 - [ ] Phase 6, Food and nutrition.
-- [ ] Phase 7, Polish and deploy: trends/charts, responsive mobile pass, Vercel deploy.
+- [ ] Phase 7, Polish and deploy: trends and charts, responsive mobile navigation, PWA support (manifest, icons, standalone display) so it installs as a home-screen app with no browser chrome, Vercel deploy, and Vercel deployment protection (password/SSO gate) to keep the app private without an in-app login.
 
 ## License
 
