@@ -1,17 +1,24 @@
 "use client";
 
-// Primary sidebar navigation. Renders NAV_ITEMS grouped by section and
-// highlights the active route based on the current pathname.
+// Primary sidebar navigation. Renders the Overview link plus collapsible
+// dropdown groups from the nav model, highlighting the active route.
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ChevronDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { NAV_ITEMS, type NavItem } from "@/lib/navigation";
+import {
+  NAV_OVERVIEW,
+  NAV_GROUPS,
+  type NavGroup,
+  type NavLeaf,
+} from "@/lib/navigation";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 // Returns true when a nav href is the active route. The overview route ("/")
-// matches only an exact path; section routes also match their nested paths.
+// matches only an exact path; other routes also match their nested paths.
 function isActiveRoute(href: string, pathname: string): boolean {
   if (href === "/") {
     return pathname === "/";
@@ -19,25 +26,9 @@ function isActiveRoute(href: string, pathname: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-// Groups nav items by section, preserving first-seen order. Ungrouped items
-// are skipped here and rendered separately above the sections.
-function groupBySection(items: readonly NavItem[]) {
-  const order: string[] = [];
-  const bySection = new Map<string, NavItem[]>();
-  for (const item of items) {
-    if (!item.section) continue;
-    if (!bySection.has(item.section)) {
-      bySection.set(item.section, []);
-      order.push(item.section);
-    }
-    bySection.get(item.section)!.push(item);
-  }
-  return order.map((section) => ({ section, items: bySection.get(section)! }));
-}
-
 // Renders one nav row. Active rows use a filled, slightly elevated pill so
 // they read distinctly from the lighter hover state on inactive rows.
-function NavRow({ item, pathname }: { item: NavItem; pathname: string }) {
+function NavRow({ item, pathname }: { item: NavLeaf; pathname: string }) {
   const Icon = item.icon;
   const active = isActiveRoute(item.href, pathname);
   return (
@@ -57,10 +48,52 @@ function NavRow({ item, pathname }: { item: NavItem; pathname: string }) {
   );
 }
 
+// A collapsible group: an uppercase header with a chevron that toggles its
+// child rows. Starts open; collapses smoothly via a grid-rows transition.
+function CollapsibleGroup({
+  group,
+  pathname,
+}: {
+  group: NavGroup;
+  pathname: string;
+}) {
+  const [open, setOpen] = useState(true);
+  return (
+    <div className="flex flex-col">
+      <button
+        type="button"
+        onClick={() => setOpen((value) => !value)}
+        aria-expanded={open}
+        className="flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground transition-colors hover:text-sidebar-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring"
+      >
+        <ChevronDown
+          className={cn(
+            "size-3.5 shrink-0 transition-transform duration-200 motion-reduce:transition-none",
+            open ? "" : "-rotate-90",
+          )}
+        />
+        {group.label}
+      </button>
+      <div
+        className={cn(
+          "grid transition-all duration-200 motion-reduce:transition-none",
+          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+        )}
+      >
+        <div className="overflow-hidden">
+          <div className="flex flex-col gap-1 pt-1 pl-4">
+            {group.items.map((item) => (
+              <NavRow key={item.href} item={item} pathname={pathname} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function Sidebar() {
   const pathname = usePathname();
-  const ungrouped = NAV_ITEMS.filter((item) => !item.section);
-  const sections = groupBySection(NAV_ITEMS);
 
   return (
     <nav
@@ -73,19 +106,12 @@ export function Sidebar() {
         </span>
         <span className="text-sm font-semibold">Personal Dashboard</span>
       </div>
-      {ungrouped.map((item) => (
-        <NavRow key={item.href} item={item} pathname={pathname} />
-      ))}
-      {sections.map((group) => (
-        <div key={group.section} className="mt-5 flex flex-col gap-1">
-          <div className="px-2.5 pb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            {group.section}
-          </div>
-          {group.items.map((item) => (
-            <NavRow key={item.href} item={item} pathname={pathname} />
-          ))}
-        </div>
-      ))}
+      <NavRow item={NAV_OVERVIEW} pathname={pathname} />
+      <div className="mt-2 flex flex-col gap-2">
+        {NAV_GROUPS.map((group) => (
+          <CollapsibleGroup key={group.label} group={group} pathname={pathname} />
+        ))}
+      </div>
       <div className="mt-auto border-t pt-2">
         <ThemeToggle />
       </div>
