@@ -15,12 +15,13 @@ export type NavItem = {
   readonly label: string;
   readonly href: string;
   readonly icon: LucideIcon;
+  readonly section?: string;
 };
 
 export const NAV_ITEMS: readonly NavItem[] = [
   { label: "Overview", href: "/", icon: LayoutDashboard },
-  { label: "To-do and goals", href: "/tasks", icon: CheckSquare },
-  { label: "Time", href: "/time", icon: Clock },
-  { label: "Workouts", href: "/workouts", icon: Dumbbell },
-  { label: "Nutrition", href: "/nutrition", icon: Apple },
+  { label: "To-do and goals", href: "/tasks", icon: CheckSquare, section: "Tracking" },
+  { label: "Time", href: "/time", icon: Clock, section: "Tracking" },
+  { label: "Workouts", href: "/workouts", icon: Dumbbell, section: "Tracking" },
+  { label: "Nutrition", href: "/nutrition", icon: Apple, section: "Tracking" },
 ];
