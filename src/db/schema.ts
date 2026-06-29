@@ -4,3 +4,4 @@
 export * from "../features/tasks/schema";
 export * from "../features/goals/schema";
 export * from "../features/time/schema";
+export * from "../features/workouts/schema";
