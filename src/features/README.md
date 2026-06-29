@@ -9,3 +9,4 @@ schemas), and `components/` (UI).
 
 - `tasks/` - to-do tasks: priorities, due dates, and completion state.
 - `goals/` - longer-term goals: progress, optional description and target date.
+- `time/` - time tracking: a start/stop timer over free-text activities.
