@@ -7,8 +7,9 @@ goals, time, workouts, and nutrition, in one place, accessible from any device.
 > light and dark themes with a toggle, a polished app shell, and a web manifest, app icons,
 > iOS meta tags, and a service worker (offline) sit on top of the data-layer foundation (Neon
 > Postgres, Drizzle, env validation, migration tooling). Live features: to-do tasks (priority,
-> due date, complete, delete), goals (progress, target date), and time tracking (start/stop
-> timer with daily totals). Gym and workouts is next. See the [Roadmap](#roadmap).
+> due date, complete, delete), goals (progress, target date), time tracking (start/stop timer
+> with daily totals), and gym workouts (per-day strength sets and cardio, reusable day types
+> and exercises). Food and nutrition is next. See the [Roadmap](#roadmap).
 
 ## Goals
 
@@ -82,8 +83,8 @@ the installable app actually lives.
 - [x] Phase 4, PWA and installable iOS app: web app manifest, code-generated app icons and iOS meta tags, standalone display with no browser chrome, safe-area handling, and a Serwist service worker (offline support; built via webpack, disabled in `next dev`). Installs to the home screen. PWA finalization (testing, install polish) lands in the deploy phase.
 - [x] Phase 5, To-do and goals: to-do tasks (title, priority, due date, complete, delete) and goals (title, description, 0-100 progress, target date) as full vertical slices (schema, migration, repo, Zod validation, server actions, UI). Input validation is unit-tested; DB-level integration tests are deferred.
 - [x] Phase 6, Time tracking: a start/stop timer over free-text activities (`time_entries` schema, migration, repo, validation, server actions) with a live-ticking clock and entries grouped by day with daily totals.
-- [ ] Phase 7, Gym and workouts (current).
-- [ ] Phase 8, Food and nutrition.
+- [x] Phase 7, Gym and workouts: a per-day view (date navigation) with a normalized model (reusable workout-day types and exercises, find-or-create and case-insensitive) covering strength sets (reps, weight) grouped by exercise and cardio sessions (duration, distance). Five tables, datalist autocomplete, daily nav via the URL.
+- [ ] Phase 8, Food and nutrition (current).
 - [ ] Phase 9, Polish and deploy: trends and charts, global UI consistency pass, PWA finalization, Vercel deploy, and Vercel deployment protection (password/SSO gate) to keep the app private without an in-app login.
 
 ## License
