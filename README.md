@@ -50,6 +50,27 @@ pnpm dev
 
 Then open [http://localhost:3000](http://localhost:3000).
 
+## Installing as an app (PWA)
+
+The app is a PWA, so it installs to a phone home screen and runs standalone (no
+browser chrome). On iPhone: open the deployed URL in Safari, then Share, then
+"Add to Home Screen."
+
+The service worker (offline support) is intentionally **disabled in `next dev`**:
+`@serwist/next` needs webpack, while `next dev` runs Turbopack, and a live worker
+during development causes confusing stale-cache behavior. So `pnpm dev` never
+serves the worker.
+
+To exercise the full PWA (service worker, offline, install) locally:
+
+```bash
+pnpm build   # runs `next build --webpack`, generates public/sw.js
+pnpm start   # serve the production build at http://localhost:3000
+```
+
+The worker is also generated on every Vercel production deploy, which is where
+the installable app actually lives.
+
 ## Roadmap
 
 - [x] Phase 0, Foundation: stack decision, README, `.gitignore`, project conventions.
