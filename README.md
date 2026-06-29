@@ -6,8 +6,9 @@ goals, time, workouts, and nutrition, in one place, accessible from any device.
 > Status: Installable PWA with a Notion-style design language. A collapsible blue-grey sidebar,
 > light and dark themes with a toggle, a polished app shell, and a web manifest, app icons,
 > iOS meta tags, and a service worker (offline) sit on top of the data-layer foundation (Neon
-> Postgres, Drizzle, env validation, migration tooling). Feature work (to-do and goals) is
-> next. See the [Roadmap](#roadmap).
+> Postgres, Drizzle, env validation, migration tooling). The first features are live: to-do
+> tasks (priority, due date, complete, delete) and goals (progress, target date). Time tracking
+> is next. See the [Roadmap](#roadmap).
 
 ## Goals
 
@@ -79,8 +80,8 @@ the installable app actually lives.
 - [x] Phase 2, Data layer foundation: Neon Postgres connection, Drizzle ORM client, Zod env validation, and drizzle-kit migration tooling. (The first migration ships with the first feature in Phase 5.)
 - [x] Phase 3, Design language and UI foundation: blue-grey design tokens (oklch, light and dark) as a single source of truth, Geist typography, a Notion-style collapsible sidebar with grouped dropdowns, a light/dark theme toggle (next-themes), and a polished full-height app shell. Every later feature is built on top of it.
 - [x] Phase 4, PWA and installable iOS app: web app manifest, code-generated app icons and iOS meta tags, standalone display with no browser chrome, safe-area handling, and a Serwist service worker (offline support; built via webpack, disabled in `next dev`). Installs to the home screen. PWA finalization (testing, install polish) lands in the deploy phase.
-- [ ] Phase 5, To-do and goals (current): first feature vertical slice end-to-end (includes the first migration).
-- [ ] Phase 6, Time tracking.
+- [x] Phase 5, To-do and goals: to-do tasks (title, priority, due date, complete, delete) and goals (title, description, 0-100 progress, target date) as full vertical slices (schema, migration, repo, Zod validation, server actions, UI). Input validation is unit-tested; DB-level integration tests are deferred.
+- [ ] Phase 6, Time tracking (current).
 - [ ] Phase 7, Gym and workouts.
 - [ ] Phase 8, Food and nutrition.
 - [ ] Phase 9, Polish and deploy: trends and charts, global UI consistency pass, PWA finalization, Vercel deploy, and Vercel deployment protection (password/SSO gate) to keep the app private without an in-app login.
