@@ -1,7 +1,7 @@
 // Typed data access for the workouts feature. The only place its rows are read
 // or written. Day types and exercises are find-or-create (reused or created).
 
-import { and, asc, eq } from "drizzle-orm";
+import { and, asc, eq, sql } from "drizzle-orm";
 
 import { db } from "@/db/client";
 import {
@@ -13,12 +13,12 @@ import {
 } from "./schema";
 import type { AddSetInput, AddCardioInput } from "./validation";
 
-// Returns the workout-day row for a name, creating it if needed.
+// Returns the workout-day row for a name (case-insensitive), creating it if needed.
 async function findOrCreateWorkoutDay(name: string) {
   const [existing] = await db
     .select()
     .from(workoutDays)
-    .where(eq(workoutDays.name, name))
+    .where(sql`lower(${workoutDays.name}) = lower(${name})`)
     .limit(1);
   if (existing) return existing;
   const [created] = await db
@@ -30,17 +30,17 @@ async function findOrCreateWorkoutDay(name: string) {
   const [row] = await db
     .select()
     .from(workoutDays)
-    .where(eq(workoutDays.name, name))
+    .where(sql`lower(${workoutDays.name}) = lower(${name})`)
     .limit(1);
   return row;
 }
 
-// Returns the exercise row for a name+kind, creating it if needed.
+// Returns the exercise row for a name+kind (case-insensitive), creating it if needed.
 async function findOrCreateExercise(name: string, kind: "strength" | "cardio") {
   const [existing] = await db
     .select()
     .from(exercises)
-    .where(and(eq(exercises.name, name), eq(exercises.kind, kind)))
+    .where(and(sql`lower(${exercises.name}) = lower(${name})`, eq(exercises.kind, kind)))
     .limit(1);
   if (existing) return existing;
   const [created] = await db
@@ -52,7 +52,7 @@ async function findOrCreateExercise(name: string, kind: "strength" | "cardio") {
   const [row] = await db
     .select()
     .from(exercises)
-    .where(and(eq(exercises.name, name), eq(exercises.kind, kind)))
+    .where(and(sql`lower(${exercises.name}) = lower(${name})`, eq(exercises.kind, kind)))
     .limit(1);
   return row;
 }
