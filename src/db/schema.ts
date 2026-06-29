@@ -2,3 +2,4 @@
 // the db client share one entry point. Add each new feature's schema here.
 
 export * from "../features/tasks/schema";
+export * from "../features/goals/schema";

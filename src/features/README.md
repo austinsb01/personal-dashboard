@@ -8,3 +8,4 @@ schemas), and `components/` (UI).
 ## Contents
 
 - `tasks/` - to-do tasks: priorities, due dates, and completion state.
+- `goals/` - longer-term goals: progress, optional description and target date.

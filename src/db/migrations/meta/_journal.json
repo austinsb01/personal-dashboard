@@ -8,6 +8,13 @@
       "when": 1782747460054,
       "tag": "0000_clean_mentor",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1782750677183,
+      "tag": "0001_optimal_gauntlet",
+      "breakpoints": true
     }
   ]
 }
