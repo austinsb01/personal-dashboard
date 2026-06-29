@@ -53,12 +53,14 @@ Then open [http://localhost:3000](http://localhost:3000).
 
 - [x] Phase 0, Foundation: stack decision, README, `.gitignore`, project conventions.
 - [x] Phase 1, Scaffold: Next.js + TypeScript + Tailwind + shadcn/ui, base layout, dashboard shell.
-- [x] Phase 2, Data layer foundation: Neon Postgres connection, Drizzle ORM client, Zod env validation, and drizzle-kit migration tooling. (The first migration ships with the first feature in Phase 3.)
-- [ ] Phase 3, To-do and goals: first vertical slice end-to-end.
-- [ ] Phase 4, Time tracking.
-- [ ] Phase 5, Gym and workouts.
-- [ ] Phase 6, Food and nutrition.
-- [ ] Phase 7, Polish and deploy: trends and charts, responsive mobile navigation, PWA support (manifest, icons, standalone display) so it installs as a home-screen app with no browser chrome, Vercel deploy, and Vercel deployment protection (password/SSO gate) to keep the app private without an in-app login.
+- [x] Phase 2, Data layer foundation: Neon Postgres connection, Drizzle ORM client, Zod env validation, and drizzle-kit migration tooling. (The first migration ships with the first feature in Phase 5.)
+- [ ] Phase 3, Design language and UI foundation (current): establish the visual direction before feature work. Design tokens (color, typography, spacing, radii, shadows) as a single source of truth, the app shell look, reusable UI primitives, and the iOS-native feel (iOS-style transitions, large tap targets, momentum scroll). Iterative: we refine the look together, and every later feature is built on top of it.
+- [ ] Phase 4, PWA and installable iOS app: web app manifest, service worker, app icons and iOS meta tags, standalone display with no browser chrome, and safe-area handling, so it installs to the home screen and the iOS-native feel can be validated on-device while building features.
+- [ ] Phase 5, To-do and goals: first feature vertical slice end-to-end (includes the first migration).
+- [ ] Phase 6, Time tracking.
+- [ ] Phase 7, Gym and workouts.
+- [ ] Phase 8, Food and nutrition.
+- [ ] Phase 9, Polish and deploy: trends and charts, global UI consistency pass, PWA finalization, Vercel deploy, and Vercel deployment protection (password/SSO gate) to keep the app private without an in-app login.
 
 ## License
 
