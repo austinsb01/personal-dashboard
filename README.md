@@ -85,7 +85,8 @@ the installable app actually lives.
 - [x] Phase 6, Time tracking: a start/stop timer over free-text activities (`time_entries` schema, migration, repo, validation, server actions) with a live-ticking clock and entries grouped by day with daily totals.
 - [x] Phase 7, Gym and workouts: a per-day view (date navigation) with a normalized model (reusable workout-day types and exercises, find-or-create and case-insensitive) covering strength sets (reps, weight) grouped by exercise and cardio sessions (duration, distance). Five tables, datalist autocomplete, daily nav via the URL.
 - [ ] Phase 8, Food and nutrition (current).
-- [ ] Phase 9, Polish and deploy: trends and charts, global UI consistency pass, PWA finalization, Vercel deploy, and Vercel deployment protection (password/SSO gate) to keep the app private without an in-app login.
+- [ ] Phase 9, Analytics: charts and trends across the tracked data (Recharts) on the analytics page, for example time totals over time, workout progression per exercise, nutrition trends, and task/goal completion.
+- [ ] Phase 10, Polish and deploy: global UI consistency pass, PWA finalization, Vercel deploy, and Vercel deployment protection (password/SSO gate) to keep the app private without an in-app login.
 
 ## License
 
