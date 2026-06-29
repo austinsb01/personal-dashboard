@@ -35,7 +35,8 @@ function groupBySection(items: readonly NavItem[]) {
   return order.map((section) => ({ section, items: bySection.get(section)! }));
 }
 
-// Renders one nav row with active and hover styling.
+// Renders one nav row. Active rows use a filled, slightly elevated pill so
+// they read distinctly from the lighter hover state on inactive rows.
 function NavRow({ item, pathname }: { item: NavItem; pathname: string }) {
   const Icon = item.icon;
   const active = isActiveRoute(item.href, pathname);
@@ -44,10 +45,10 @@ function NavRow({ item, pathname }: { item: NavItem; pathname: string }) {
       href={item.href}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "flex items-center gap-2.5 rounded-md px-2 py-1.5 text-sm transition-colors",
+        "flex items-center gap-3 rounded-lg px-2.5 py-2 text-sm transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring",
         active
-          ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground"
-          : "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+          ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground shadow-sm"
+          : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
       )}
     >
       <Icon className="size-4 shrink-0" />
@@ -64,15 +65,20 @@ export function Sidebar() {
   return (
     <nav
       aria-label="Primary"
-      className="flex h-full w-60 shrink-0 flex-col gap-0.5 border-r bg-sidebar p-3 text-sidebar-foreground"
+      className="flex h-full w-64 shrink-0 flex-col gap-1 border-r bg-sidebar p-3 text-sidebar-foreground"
     >
-      <div className="mb-2 px-2 py-1.5 text-sm font-semibold">Personal Dashboard</div>
+      <div className="mb-2 flex items-center gap-2.5 px-1.5 py-1.5">
+        <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-sidebar-primary text-xs font-semibold text-sidebar-primary-foreground">
+          PD
+        </span>
+        <span className="text-sm font-semibold">Personal Dashboard</span>
+      </div>
       {ungrouped.map((item) => (
         <NavRow key={item.href} item={item} pathname={pathname} />
       ))}
       {sections.map((group) => (
-        <div key={group.section} className="mt-4 flex flex-col gap-0.5">
-          <div className="px-2 pb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+        <div key={group.section} className="mt-5 flex flex-col gap-1">
+          <div className="px-2.5 pb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
             {group.section}
           </div>
           {group.items.map((item) => (
@@ -80,7 +86,7 @@ export function Sidebar() {
           ))}
         </div>
       ))}
-      <div className="mt-auto pt-2">
+      <div className="mt-auto border-t pt-2">
         <ThemeToggle />
       </div>
     </nav>
