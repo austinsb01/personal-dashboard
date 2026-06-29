@@ -5,10 +5,12 @@ The dashboard shell: the persistent frame that wraps every route.
 ## Contents
 
 - `dashboard-shell.tsx` - top-level layout that places the sidebar beside the
-  main content region. Applied once in the root `app/layout.tsx`.
-- `sidebar.tsx` - primary navigation. Renders links from `NAV_ITEMS`
-  (`@/lib/navigation`) and highlights the active route. Client component
-  because it reads the current pathname.
+  main content region. Full viewport height (`h-dvh`); the content area
+  scrolls in a centered `max-w-5xl` column. Applied once in `app/layout.tsx`.
+- `sidebar.tsx` - primary navigation. Renders the Overview link plus collapsible
+  dropdown groups from `@/lib/navigation` (`NAV_OVERVIEW`, `NAV_GROUPS`),
+  highlights the active route, and hosts the theme toggle. Client component
+  because it reads the current pathname and tracks open/closed groups.
 
 ## Notes
 

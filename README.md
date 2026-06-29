@@ -3,10 +3,10 @@
 A self-hosted personal dashboard to organize and track the things I care about: tasks,
 goals, time, workouts, and nutrition, in one place, accessible from any device.
 
-> Status: Data layer foundation in place. The Next.js 16 app, dashboard shell, and section
-> navigation are built, and the Neon Postgres connection, Drizzle ORM client, env validation,
-> and migration tooling are wired up and verified. Feature work (to-do and goals) is next.
-> See the [Roadmap](#roadmap).
+> Status: Design language in place. A Notion-style UI with a collapsible blue-grey sidebar,
+> light and dark themes with a toggle, and a polished app shell sit on top of the data-layer
+> foundation (Neon Postgres, Drizzle, env validation, migration tooling). The installable PWA
+> shell (Phase 4) is next, then feature work. See the [Roadmap](#roadmap).
 
 ## Goals
 
@@ -31,6 +31,7 @@ goals, time, workouts, and nutrition, in one place, accessible from any device.
 | Framework | [Next.js 16](https://nextjs.org/) (App Router) + React 19 | UI and API routes/server actions in one codebase. |
 | Language | [TypeScript](https://www.typescriptlang.org/) | Type safety across the stack. |
 | Styling | [Tailwind CSS](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/) | Fast, polished, fully-owned components. |
+| Theming | [next-themes](https://github.com/pacocoursey/next-themes) | Light and dark blue-grey themes with a toggle, no flash. |
 | Database | [PostgreSQL](https://www.postgresql.org/) via [Neon](https://neon.tech/) | Serverless Postgres that pairs cleanly with Vercel. |
 | ORM | [Drizzle ORM](https://orm.drizzle.team/) | TypeScript-first, lightweight, immutable-friendly. |
 | Access control | [Vercel Deployment Protection](https://vercel.com/docs/deployment-protection) | Keeps the deployed app private without an in-app login (single-user). |
@@ -54,8 +55,8 @@ Then open [http://localhost:3000](http://localhost:3000).
 - [x] Phase 0, Foundation: stack decision, README, `.gitignore`, project conventions.
 - [x] Phase 1, Scaffold: Next.js + TypeScript + Tailwind + shadcn/ui, base layout, dashboard shell.
 - [x] Phase 2, Data layer foundation: Neon Postgres connection, Drizzle ORM client, Zod env validation, and drizzle-kit migration tooling. (The first migration ships with the first feature in Phase 5.)
-- [ ] Phase 3, Design language and UI foundation (current): establish the visual direction before feature work. Design tokens (color, typography, spacing, radii, shadows) as a single source of truth, the app shell look, reusable UI primitives, and the iOS-native feel (iOS-style transitions, large tap targets, momentum scroll). Iterative: we refine the look together, and every later feature is built on top of it.
-- [ ] Phase 4, PWA and installable iOS app: web app manifest, service worker, app icons and iOS meta tags, standalone display with no browser chrome, and safe-area handling, so it installs to the home screen and the iOS-native feel can be validated on-device while building features.
+- [x] Phase 3, Design language and UI foundation: blue-grey design tokens (oklch, light and dark) as a single source of truth, Geist typography, a Notion-style collapsible sidebar with grouped dropdowns, a light/dark theme toggle (next-themes), and a polished full-height app shell. Every later feature is built on top of it.
+- [ ] Phase 4, PWA and installable iOS app (current): web app manifest, service worker, app icons and iOS meta tags, standalone display with no browser chrome, and safe-area handling, so it installs to the home screen and the iOS-native feel can be validated on-device while building features.
 - [ ] Phase 5, To-do and goals: first feature vertical slice end-to-end (includes the first migration).
 - [ ] Phase 6, Time tracking.
 - [ ] Phase 7, Gym and workouts.
