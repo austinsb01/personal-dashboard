@@ -1,6 +1,6 @@
 // Typed data access for tasks. The only place task rows are read or written.
 
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 import { db } from "@/db/client";
 import { tasks } from "./schema";
@@ -23,5 +23,18 @@ export const tasksRepo = {
       })
       .returning();
     return task;
+  },
+
+  // Sets a task's completion state and bumps updatedAt.
+  async setCompleted(id: string, isCompleted: boolean) {
+    await db
+      .update(tasks)
+      .set({ isCompleted, updatedAt: new Date() })
+      .where(eq(tasks.id, id));
+  },
+
+  // Deletes a task.
+  async remove(id: string) {
+    await db.delete(tasks).where(eq(tasks.id, id));
   },
 };

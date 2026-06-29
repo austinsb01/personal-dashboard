@@ -41,3 +41,15 @@ export async function createTaskAction(
   revalidatePath("/tasks");
   return { ok: true };
 }
+
+export async function toggleTaskAction(id: string, isCompleted: boolean) {
+  if (!z.uuid().safeParse(id).success) return;
+  await tasksRepo.setCompleted(id, isCompleted);
+  revalidatePath("/tasks");
+}
+
+export async function deleteTaskAction(id: string) {
+  if (!z.uuid().safeParse(id).success) return;
+  await tasksRepo.remove(id);
+  revalidatePath("/tasks");
+}
