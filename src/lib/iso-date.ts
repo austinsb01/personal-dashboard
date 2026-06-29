@@ -1,5 +1,17 @@
-// Date helpers for the per-day workouts view. Dates are ISO day strings
-// (YYYY-MM-DD) handled in UTC to avoid timezone drift.
+// Shared ISO-day helpers for the per-day feature views (workouts, nutrition).
+// Day strings are YYYY-MM-DD, handled in UTC to avoid timezone drift.
+
+export const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
+// True only for well-formed YYYY-MM-DD day strings.
+export function isIsoDate(value: string): boolean {
+  return ISO_DATE_PATTERN.test(value);
+}
+
+// Today as an ISO day string.
+export function todayIso(): string {
+  return new Date().toISOString().slice(0, 10);
+}
 
 // Returns the ISO day string offset by the given number of days.
 export function addDays(isoDate: string, days: number): string {
