@@ -17,14 +17,17 @@ export function ComingSoon({
   description: string;
 }) {
   return (
-    <div className="flex flex-col gap-6">
-      <header className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold">{title}</h1>
+    <div className="flex flex-col gap-8">
+      <header className="flex flex-col gap-1.5">
+        <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
+        <p className="text-sm text-muted-foreground">{description}</p>
       </header>
       <Card>
         <CardHeader>
           <CardTitle>Coming soon</CardTitle>
-          <CardDescription>{description}</CardDescription>
+          <CardDescription>
+            This area is under construction and will be available shortly.
+          </CardDescription>
         </CardHeader>
       </Card>
     </div>
