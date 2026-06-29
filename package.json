@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "concurrently \"next dev\" \"wait-on http://localhost:3000 && open-cli http://localhost:3000\"",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
     "db:generate": "node --env-file=.env node_modules/drizzle-kit/bin.cjs generate",
@@ -13,6 +13,7 @@
   "dependencies": {
     "@base-ui/react": "^1.6.0",
     "@neondatabase/serverless": "^1.1.0",
+    "@serwist/next": "^9.5.11",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.45.2",
@@ -36,6 +37,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
     "open-cli": "^9.0.0",
+    "serwist": "^9.5.11",
     "tailwindcss": "^4",
     "typescript": "^5",
     "wait-on": "^9.0.10"

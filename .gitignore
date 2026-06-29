@@ -38,6 +38,11 @@ next-env.d.ts
 # Vercel
 .vercel
 
+# Serwist (generated service worker output)
+public/sw.js
+public/sw.js.map
+public/swe-worker-*.js
+
 # TypeScript
 *.tsbuildinfo
 
