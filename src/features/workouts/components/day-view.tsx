@@ -106,7 +106,7 @@ export function DayView(props: DayViewProps) {
                           className="group flex items-center justify-between gap-3 text-sm text-muted-foreground"
                         >
                           <span className="tabular-nums">
-                            {set.weight} × {set.reps}
+                            {set.weight} lbs × {set.reps}
                           </span>
                           <form action={removeSetAction.bind(null, set.id)}>
                             <button
@@ -146,7 +146,7 @@ export function DayView(props: DayViewProps) {
                 <div className="flex shrink-0 items-center gap-3 text-xs text-muted-foreground">
                   <span className="tabular-nums">
                     {entry.durationMinutes} min
-                    {entry.distance != null ? ` · ${entry.distance}` : ""}
+                    {entry.distance != null ? ` · ${entry.distance} mi` : ""}
                   </span>
                   <form action={removeCardioAction.bind(null, entry.id)}>
                     <button
