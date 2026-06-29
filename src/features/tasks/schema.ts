@@ -2,7 +2,9 @@
 
 import { pgTable, uuid, text, boolean, timestamp, index, pgEnum } from "drizzle-orm/pg-core";
 
-export const taskPriority = pgEnum("task_priority", ["low", "medium", "high"]);
+import { TASK_PRIORITIES } from "./constants";
+
+export const taskPriority = pgEnum("task_priority", TASK_PRIORITIES);
 
 export const tasks = pgTable(
   "tasks",
