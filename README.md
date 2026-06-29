@@ -3,10 +3,11 @@
 A self-hosted personal dashboard to organize and track the things I care about: tasks,
 goals, time, workouts, and nutrition, in one place, accessible from any device.
 
-> Status: Design language in place. A Notion-style UI with a collapsible blue-grey sidebar,
-> light and dark themes with a toggle, and a polished app shell sit on top of the data-layer
-> foundation (Neon Postgres, Drizzle, env validation, migration tooling). The installable PWA
-> shell (Phase 4) is next, then feature work. See the [Roadmap](#roadmap).
+> Status: Installable PWA with a Notion-style design language. A collapsible blue-grey sidebar,
+> light and dark themes with a toggle, a polished app shell, and a web manifest, app icons,
+> iOS meta tags, and a service worker (offline) sit on top of the data-layer foundation (Neon
+> Postgres, Drizzle, env validation, migration tooling). Feature work (to-do and goals) is
+> next. See the [Roadmap](#roadmap).
 
 ## Goals
 
@@ -77,8 +78,8 @@ the installable app actually lives.
 - [x] Phase 1, Scaffold: Next.js + TypeScript + Tailwind + shadcn/ui, base layout, dashboard shell.
 - [x] Phase 2, Data layer foundation: Neon Postgres connection, Drizzle ORM client, Zod env validation, and drizzle-kit migration tooling. (The first migration ships with the first feature in Phase 5.)
 - [x] Phase 3, Design language and UI foundation: blue-grey design tokens (oklch, light and dark) as a single source of truth, Geist typography, a Notion-style collapsible sidebar with grouped dropdowns, a light/dark theme toggle (next-themes), and a polished full-height app shell. Every later feature is built on top of it.
-- [ ] Phase 4, PWA and installable iOS app (current): web app manifest, service worker, app icons and iOS meta tags, standalone display with no browser chrome, and safe-area handling, so it installs to the home screen and the iOS-native feel can be validated on-device while building features.
-- [ ] Phase 5, To-do and goals: first feature vertical slice end-to-end (includes the first migration).
+- [x] Phase 4, PWA and installable iOS app: web app manifest, code-generated app icons and iOS meta tags, standalone display with no browser chrome, safe-area handling, and a Serwist service worker (offline support; built via webpack, disabled in `next dev`). Installs to the home screen. PWA finalization (testing, install polish) lands in the deploy phase.
+- [ ] Phase 5, To-do and goals (current): first feature vertical slice end-to-end (includes the first migration).
 - [ ] Phase 6, Time tracking.
 - [ ] Phase 7, Gym and workouts.
 - [ ] Phase 8, Food and nutrition.
