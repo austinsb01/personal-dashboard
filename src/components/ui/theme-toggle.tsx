@@ -3,19 +3,28 @@
 // Light/dark theme toggle. Renders a stable default until mounted to avoid a
 // hydration mismatch, then reflects and switches the active theme.
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
+const emptySubscribe = () => () => {};
+
+// True only after client hydration; false during SSR and the first render.
+function useHydrated(): boolean {
+  return useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
+}
+
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const hydrated = useHydrated();
 
-  useEffect(() => setMounted(true), []);
-
-  const isDark = mounted && resolvedTheme === "dark";
+  const isDark = hydrated && resolvedTheme === "dark";
 
   return (
     <Button
