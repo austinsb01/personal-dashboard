@@ -11,6 +11,7 @@ import {
   Droplet,
   Dumbbell,
   BarChart3,
+  Settings,
   type LucideIcon,
 } from "lucide-react";
 
@@ -54,5 +55,9 @@ export const NAV_GROUPS: readonly NavGroup[] = [
   {
     label: "Analytics",
     items: [{ label: "Analytics", href: "/analytics", icon: BarChart3 }],
+  },
+  {
+    label: "Settings",
+    items: [{ label: "Settings", href: "/settings", icon: Settings }],
   },
 ];

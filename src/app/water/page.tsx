@@ -1,5 +1,6 @@
 import { waterRepo } from "@/features/water/repo";
 import { WaterView } from "@/features/water/components/water-view";
+import { settingsRepo } from "@/features/settings/repo";
 import { isIsoDate, todayIso } from "@/lib/iso-date";
 
 export const dynamic = "force-dynamic";
@@ -12,10 +13,13 @@ export default async function WaterPage({
   const params = await searchParams;
   const date = params.date && isIsoDate(params.date) ? params.date : todayIso();
 
-  const [total, entries] = await Promise.all([
+  const [total, entries, targets] = await Promise.all([
     waterRepo.dailyTotalForDay(date),
     waterRepo.listForDay(date),
+    settingsRepo.getTargets(),
   ]);
 
-  return <WaterView date={date} total={total} entries={entries} />;
+  return (
+    <WaterView date={date} total={total} goal={targets.waterOz} entries={entries} />
+  );
 }
