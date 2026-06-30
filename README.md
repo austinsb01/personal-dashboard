@@ -89,7 +89,8 @@ the installable app actually lives.
 - [x] Phase 7, Gym and workouts: a per-day view (date navigation) with a normalized model (reusable workout-day types and exercises, find-or-create and case-insensitive) covering strength sets (reps, weight) grouped by exercise and cardio sessions (duration, distance). Five tables, datalist autocomplete, daily nav via the URL.
 - [x] Phase 8, Food and nutrition: a per-day view (date navigation) over a normalized model (a reusable `foods` catalog with per-serving macros and dated `meal_entries`). Logging a known food auto-fills its serving and macros; entries are grouped by meal type (breakfast/lunch/dinner/snack) with per-meal and daily calorie and macro totals.
 - [x] Phase 9, Analytics: charts and trends across the tracked data (Recharts) on the analytics page over a selectable 7/30/90-day window: daily calories and macros, hours stacked by activity, workout volume per session (with an exercise picker), tasks completed per week, and goal progress. Server-side SQL aggregation feeds presentational client charts; shared range and series helpers are unit-tested.
-- [ ] Phase 10, Polish and deploy (current): global UI consistency pass, PWA finalization, Vercel deploy, and Vercel deployment protection (password/SSO gate) to keep the app private without an in-app login.
+- [ ] Phase 10, Water (current): a per-day water tracker under the Nutrition area (its own `water_entries` slice and `/water` page) with quick-add buttons (8/12/16 oz) and a custom amount, a daily total against a goal shown as a progress bar, and a deletable entries list. Adds a daily water-intake chart (with a goal reference line) to the analytics page.
+- [ ] Phase 11, Polish and deploy: global UI consistency pass, PWA finalization, Vercel deploy, and Vercel deployment protection (password/SSO gate) to keep the app private without an in-app login.
 
 ## License
 
