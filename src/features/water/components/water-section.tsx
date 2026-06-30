@@ -4,7 +4,7 @@
 import { ChartCard } from "@/components/charts/chart-card";
 import { fillDays } from "@/lib/analytics/series";
 import { waterRepo } from "@/features/water/repo";
-import { DEFAULT_WATER_GOAL_OZ } from "@/features/water/constants";
+import { settingsRepo } from "@/features/settings/repo";
 import {
   WaterTrendChart,
   type WaterTrendPoint,
@@ -21,7 +21,10 @@ export async function WaterSection({
   to: string;
   days: string[];
 }) {
-  const rows = await waterRepo.dailyTotals(from, to);
+  const [rows, targets] = await Promise.all([
+    waterRepo.dailyTotals(from, to),
+    settingsRepo.getTargets(),
+  ]);
   const data: WaterTrendPoint[] = fillDays(
     days,
     rows.map((row) => ({ day: row.day, oz: Math.round(Number(row.oz)) })),
@@ -29,7 +32,7 @@ export async function WaterSection({
   );
   return (
     <ChartCard title="Water" description="Daily ounces vs goal">
-      <WaterTrendChart data={data} goal={DEFAULT_WATER_GOAL_OZ} />
+      <WaterTrendChart data={data} goal={targets.waterOz} />
     </ChartCard>
   );
 }

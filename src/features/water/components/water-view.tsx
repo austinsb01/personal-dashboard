@@ -8,21 +8,20 @@ import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
 import { addDays, formatDay } from "@/lib/iso-date";
 import { removeWaterAction } from "@/features/water/actions";
 import { WaterControls } from "@/features/water/components/water-forms";
-import { DEFAULT_WATER_GOAL_OZ } from "@/features/water/constants";
 
 type EntryRow = { id: string; amountOz: number };
 
 type WaterViewProps = {
   date: string;
   total: number;
+  goal: number;
   entries: EntryRow[];
 };
 
 const navLinkClass =
   "flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground";
 
-export function WaterView({ date, total, entries }: WaterViewProps) {
-  const goal = DEFAULT_WATER_GOAL_OZ;
+export function WaterView({ date, total, goal, entries }: WaterViewProps) {
   const percent = Math.min(100, Math.round((total / goal) * 100));
   return (
     <div className="flex flex-col gap-8">
