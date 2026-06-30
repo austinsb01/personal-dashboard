@@ -5,7 +5,7 @@
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
 
-import { addDays, formatDay } from "@/features/workouts/date";
+import { addDays, formatDay } from "@/lib/iso-date";
 import {
   removeSetAction,
   removeCardioAction,

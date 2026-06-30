@@ -29,6 +29,13 @@
       "when": 1782762864437,
       "tag": "0003_classy_forge",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1782774400499,
+      "tag": "0004_whole_blur",
+      "breakpoints": true
     }
   ]
 }

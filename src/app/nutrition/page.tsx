@@ -1,10 +1,21 @@
-import { ComingSoon } from "@/components/coming-soon";
+import { nutritionRepo } from "@/features/nutrition/repo";
+import { DayView } from "@/features/nutrition/components/day-view";
+import { isIsoDate, todayIso } from "@/lib/iso-date";
 
-export default function NutritionPage() {
-  return (
-    <ComingSoon
-      title="Nutrition"
-      description="Log meals with calories and macros and see daily summaries here."
-    />
-  );
+export const dynamic = "force-dynamic";
+
+export default async function NutritionPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ date?: string }>;
+}) {
+  const params = await searchParams;
+  const date = params.date && isIsoDate(params.date) ? params.date : todayIso();
+
+  const [foods, entries] = await Promise.all([
+    nutritionRepo.listFoods(),
+    nutritionRepo.listEntriesForDay(date),
+  ]);
+
+  return <DayView date={date} foods={foods} entries={entries} />;
 }

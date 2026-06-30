@@ -8,8 +8,9 @@ goals, time, workouts, and nutrition, in one place, accessible from any device.
 > iOS meta tags, and a service worker (offline) sit on top of the data-layer foundation (Neon
 > Postgres, Drizzle, env validation, migration tooling). Live features: to-do tasks (priority,
 > due date, complete, delete), goals (progress, target date), time tracking (start/stop timer
-> with daily totals), and gym workouts (per-day strength sets and cardio, reusable day types
-> and exercises). Food and nutrition is next. See the [Roadmap](#roadmap).
+> with daily totals), gym workouts (per-day strength sets and cardio, reusable day types
+> and exercises), and food and nutrition (per-day meal log over a reusable food catalog, grouped
+> by meal with daily macro totals). Analytics is next. See the [Roadmap](#roadmap).
 
 ## Goals
 
@@ -84,8 +85,8 @@ the installable app actually lives.
 - [x] Phase 5, To-do and goals: to-do tasks (title, priority, due date, complete, delete) and goals (title, description, 0-100 progress, target date) as full vertical slices (schema, migration, repo, Zod validation, server actions, UI). Input validation is unit-tested; DB-level integration tests are deferred.
 - [x] Phase 6, Time tracking: a start/stop timer over free-text activities (`time_entries` schema, migration, repo, validation, server actions) with a live-ticking clock and entries grouped by day with daily totals.
 - [x] Phase 7, Gym and workouts: a per-day view (date navigation) with a normalized model (reusable workout-day types and exercises, find-or-create and case-insensitive) covering strength sets (reps, weight) grouped by exercise and cardio sessions (duration, distance). Five tables, datalist autocomplete, daily nav via the URL.
-- [ ] Phase 8, Food and nutrition (current).
-- [ ] Phase 9, Analytics: charts and trends across the tracked data (Recharts) on the analytics page, for example time totals over time, workout progression per exercise, nutrition trends, and task/goal completion.
+- [x] Phase 8, Food and nutrition: a per-day view (date navigation) over a normalized model (a reusable `foods` catalog with per-serving macros and dated `meal_entries`). Logging a known food auto-fills its serving and macros; entries are grouped by meal type (breakfast/lunch/dinner/snack) with per-meal and daily calorie and macro totals.
+- [ ] Phase 9, Analytics (current): charts and trends across the tracked data (Recharts) on the analytics page, for example time totals over time, workout progression per exercise, nutrition trends, and task/goal completion.
 - [ ] Phase 10, Polish and deploy: global UI consistency pass, PWA finalization, Vercel deploy, and Vercel deployment protection (password/SSO gate) to keep the app private without an in-app login.
 
 ## License
