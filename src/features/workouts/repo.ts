@@ -113,6 +113,35 @@ export const workoutsRepo = {
       .orderBy(asc(exercises.name));
   },
 
+  // Distinct strength-exercise names that have logged sets (for the picker).
+  listExercisesWithSets() {
+    return db
+      .selectDistinct({ name: exercises.name })
+      .from(strengthSets)
+      .innerJoin(exercises, eq(strengthSets.exerciseId, exercises.id))
+      .orderBy(asc(exercises.name));
+  },
+
+  // Total volume (sum reps*weight) per session date for an exercise, in a window.
+  exerciseVolumeByDate(exerciseName: string, from: string, to: string) {
+    return db
+      .select({
+        day: workouts.performedOn,
+        volume: sql<number>`sum(${strengthSets.reps} * ${strengthSets.weight})`,
+      })
+      .from(strengthSets)
+      .innerJoin(workouts, eq(strengthSets.workoutId, workouts.id))
+      .innerJoin(exercises, eq(strengthSets.exerciseId, exercises.id))
+      .where(
+        and(
+          sql`lower(${exercises.name}) = lower(${exerciseName})`,
+          between(workouts.performedOn, from, to),
+        ),
+      )
+      .groupBy(workouts.performedOn)
+      .orderBy(asc(workouts.performedOn));
+  },
+
   // Adds a strength set to a workout (find-or-creates the exercise).
   async addSet(workoutId: string, input: AddSetInput) {
     const exercise = await findOrCreateExercise(input.exercise, "strength");
