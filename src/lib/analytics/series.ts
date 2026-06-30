@@ -1,3 +1,5 @@
+import { addDays } from "@/lib/iso-date";
+
 // Merges sparse, day-keyed rows onto a continuous day axis, filling days with no
 // data using a supplied empty value. Keeps the axis order so charts render gaps
 // as zero rather than skipping them.
@@ -34,4 +36,21 @@ export function pivotDays(
     return point;
   });
   return { keys, data };
+}
+
+// Monday on or before the given ISO day.
+function mondayOf(isoDate: string): string {
+  const dow = (new Date(`${isoDate}T00:00:00Z`).getUTCDay() + 6) % 7;
+  return addDays(isoDate, -dow);
+}
+
+// Monday-aligned week-start days covering [from, to], inclusive.
+export function weekAxis(from: string, to: string): string[] {
+  const weeks: string[] = [];
+  let cursor = mondayOf(from);
+  while (cursor <= to) {
+    weeks.push(cursor);
+    cursor = addDays(cursor, 7);
+  }
+  return weeks;
 }

@@ -2,7 +2,7 @@
 
 import { describe, expect, it } from "vitest";
 
-import { fillDays, pivotDays } from "./series";
+import { fillDays, pivotDays, weekAxis } from "./series";
 
 describe("fillDays", () => {
   const days = ["2026-06-28", "2026-06-29", "2026-06-30"];
@@ -43,5 +43,19 @@ describe("pivotDays", () => {
       { day: "2026-06-29", Work: 2, Reading: 1 },
       { day: "2026-06-30", Work: 3, Reading: 0 },
     ]);
+  });
+});
+
+describe("weekAxis", () => {
+  it("lists Monday-aligned week starts covering the window", () => {
+    // 2026-06-29 is a Monday; 2026-07-12 is a Sunday.
+    expect(weekAxis("2026-06-29", "2026-07-12")).toEqual([
+      "2026-06-29",
+      "2026-07-06",
+    ]);
+  });
+
+  it("includes the week that contains a mid-week start", () => {
+    expect(weekAxis("2026-07-01", "2026-07-05")).toEqual(["2026-06-29"]);
   });
 });
