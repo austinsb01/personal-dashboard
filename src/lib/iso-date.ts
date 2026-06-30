@@ -29,3 +29,12 @@ export function formatDay(isoDate: string): string {
     timeZone: "UTC",
   });
 }
+
+// Formats an ISO day string compactly, e.g. "Jun 29" (for chart axes).
+export function formatDayShort(isoDate: string): string {
+  return new Date(`${isoDate}T00:00:00Z`).toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  });
+}
