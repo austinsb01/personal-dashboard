@@ -9,8 +9,10 @@ goals, time, workouts, and nutrition, in one place, accessible from any device.
 > Postgres, Drizzle, env validation, migration tooling). Live features: to-do tasks (priority,
 > due date, complete, delete), goals (progress, target date), time tracking (start/stop timer
 > with daily totals), gym workouts (per-day strength sets and cardio, reusable day types
-> and exercises), and food and nutrition (per-day meal log over a reusable food catalog, grouped
-> by meal with daily macro totals). Analytics is next. See the [Roadmap](#roadmap).
+> and exercises), food and nutrition (per-day meal log over a reusable food catalog, grouped
+> by meal with daily macro totals), and analytics (Recharts trends for nutrition, time, workout
+> volume, and task/goal completion over a selectable window). Polish and deploy is next. See the
+> [Roadmap](#roadmap).
 
 ## Goals
 
@@ -86,8 +88,8 @@ the installable app actually lives.
 - [x] Phase 6, Time tracking: a start/stop timer over free-text activities (`time_entries` schema, migration, repo, validation, server actions) with a live-ticking clock and entries grouped by day with daily totals.
 - [x] Phase 7, Gym and workouts: a per-day view (date navigation) with a normalized model (reusable workout-day types and exercises, find-or-create and case-insensitive) covering strength sets (reps, weight) grouped by exercise and cardio sessions (duration, distance). Five tables, datalist autocomplete, daily nav via the URL.
 - [x] Phase 8, Food and nutrition: a per-day view (date navigation) over a normalized model (a reusable `foods` catalog with per-serving macros and dated `meal_entries`). Logging a known food auto-fills its serving and macros; entries are grouped by meal type (breakfast/lunch/dinner/snack) with per-meal and daily calorie and macro totals.
-- [ ] Phase 9, Analytics (current): charts and trends across the tracked data (Recharts) on the analytics page, for example time totals over time, workout progression per exercise, nutrition trends, and task/goal completion.
-- [ ] Phase 10, Polish and deploy: global UI consistency pass, PWA finalization, Vercel deploy, and Vercel deployment protection (password/SSO gate) to keep the app private without an in-app login.
+- [x] Phase 9, Analytics: charts and trends across the tracked data (Recharts) on the analytics page over a selectable 7/30/90-day window: daily calories and macros, hours stacked by activity, workout volume per session (with an exercise picker), tasks completed per week, and goal progress. Server-side SQL aggregation feeds presentational client charts; shared range and series helpers are unit-tested.
+- [ ] Phase 10, Polish and deploy (current): global UI consistency pass, PWA finalization, Vercel deploy, and Vercel deployment protection (password/SSO gate) to keep the app private without an in-app login.
 
 ## License
 

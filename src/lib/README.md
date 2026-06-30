@@ -12,3 +12,8 @@ Framework-agnostic helpers and shared data. Nothing here renders UI directly.
 - `env.ts` - validates required environment variables (currently `DATABASE_URL`)
   with Zod at load time and exports a typed, frozen `env` object. The single
   source of truth for config; nothing else reads `process.env` directly.
+- `iso-date.ts` - shared helpers for ISO day strings (`YYYY-MM-DD`, handled in
+  UTC): `isIsoDate`, `todayIso`, `addDays`, `formatDay`, and `formatDayShort`.
+  Used by the per-day feature views and the analytics chart axes.
+- `analytics/` - pure date-range and series helpers for the charts. See
+  `analytics/README.md`.

@@ -17,4 +17,7 @@ servings. The day view groups entries by meal with per-meal and day totals.
 - `actions.ts` - server actions that validate at the boundary and revalidate.
 - `totals.ts` - pure day-summary helper: scales per-serving macros by quantity
   and groups entries by meal with per-meal and day totals.
-- `components/` - the day view and the food log form.
+- `components/` - the day view, the food log form, and the analytics nutrition
+  section and trend chart.
+- Analytics: `nutritionRepo.dailyTotals` feeds a daily calories-and-macros trend
+  chart on the analytics page.

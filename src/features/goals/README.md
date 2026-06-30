@@ -8,3 +8,5 @@ actions, validation, UI) for the dashboard's goals area.
 
 - `schema.ts` - the Drizzle `goals` table. The single source of truth that the
   repository and derived types build on.
+- Analytics: `goalsRepo.listProgress` plus `components/` (a goal section and a
+  progress bar chart) feed the analytics page.
