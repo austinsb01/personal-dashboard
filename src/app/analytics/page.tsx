@@ -29,14 +29,14 @@ export default async function AnalyticsPage({
           params={{ exercise: params.exercise }}
         />
       </header>
-      <div className="grid gap-4 lg:grid-cols-2">
-        <div className="lg:col-span-2">
-          <NutritionSection from={from} to={to} days={days} />
+      <div className="flex flex-col gap-4">
+        <NutritionSection from={from} to={to} days={days} />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <TimeSection from={from} to={to} days={days} />
+          <WorkoutSection from={from} to={to} range={range} exercise={params.exercise} />
+          <TaskSection from={from} to={to} />
+          <GoalSection />
         </div>
-        <TimeSection from={from} to={to} days={days} />
-        <WorkoutSection from={from} to={to} range={range} exercise={params.exercise} />
-        <TaskSection from={from} to={to} />
-        <GoalSection />
       </div>
     </div>
   );
