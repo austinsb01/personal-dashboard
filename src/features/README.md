@@ -12,3 +12,4 @@ schemas), and `components/` (UI).
 - `time/` - time tracking: a start/stop timer over free-text activities.
 - `workouts/` - gym and workouts: per-day view, reusable day types and exercises, sets, and cardio.
 - `nutrition/` - food and nutrition: per-day view, a reusable food catalog with macros, and meal entries grouped by meal with daily totals.
+- `water/` - water intake: per-day tracker in fluid ounces with quick-add, a daily goal progress bar, and a deletable entries list.
