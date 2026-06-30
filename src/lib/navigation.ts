@@ -8,6 +8,7 @@ import {
   Target,
   Clock,
   Apple,
+  Droplet,
   Dumbbell,
   BarChart3,
   type LucideIcon,
@@ -41,7 +42,10 @@ export const NAV_GROUPS: readonly NavGroup[] = [
   },
   {
     label: "Nutrition",
-    items: [{ label: "Nutrition", href: "/nutrition", icon: Apple }],
+    items: [
+      { label: "Nutrition", href: "/nutrition", icon: Apple },
+      { label: "Water", href: "/water", icon: Droplet },
+    ],
   },
   {
     label: "Gym",
