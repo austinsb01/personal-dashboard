@@ -17,10 +17,13 @@ import {
   type DayEntry,
   type Totals,
 } from "@/features/nutrition/totals";
+import { TargetsProgress } from "@/features/nutrition/components/targets-progress";
+import type { Targets } from "@/features/settings/repo";
 
 type DayViewProps = {
   date: string;
   foods: FoodOption[];
+  targets: Targets;
   entries: DayEntry[];
 };
 
@@ -35,7 +38,7 @@ function macroLine(totals: Totals): string {
   return `${totals.calories} cal · ${totals.proteinG}p · ${totals.carbsG}c · ${totals.fatG}f`;
 }
 
-export function DayView({ date, foods, entries }: DayViewProps) {
+export function DayView({ date, foods, targets, entries }: DayViewProps) {
   const summary = summarizeDay(entries);
   return (
     <div className="flex flex-col gap-8">
@@ -51,11 +54,6 @@ export function DayView({ date, foods, entries }: DayViewProps) {
           <h1 className="text-xl font-semibold tracking-tight">
             {formatDay(date)}
           </h1>
-          {summary.meals.length > 0 && (
-            <span className="text-xs text-muted-foreground tabular-nums">
-              {macroLine(summary.total)}
-            </span>
-          )}
         </div>
         <Link
           href={`/nutrition?date=${addDays(date, 1)}`}
@@ -65,6 +63,8 @@ export function DayView({ date, foods, entries }: DayViewProps) {
           <ChevronRight className="size-5" />
         </Link>
       </header>
+
+      <TargetsProgress total={summary.total} targets={targets} />
 
       <LogFoodForm date={date} foods={foods} />
 
