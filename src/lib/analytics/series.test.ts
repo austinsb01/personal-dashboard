@@ -2,7 +2,7 @@
 
 import { describe, expect, it } from "vitest";
 
-import { fillDays } from "./series";
+import { fillDays, pivotDays } from "./series";
 
 describe("fillDays", () => {
   const days = ["2026-06-28", "2026-06-29", "2026-06-30"];
@@ -22,5 +22,26 @@ describe("fillDays", () => {
     const filled = fillDays(days, [{ day: "2026-06-29", calories: 500 }], empty);
     expect(filled[0]).toEqual({ day: "2026-06-28", calories: 0 });
     expect(filled[2]).toEqual({ day: "2026-06-30", calories: 0 });
+  });
+});
+
+describe("pivotDays", () => {
+  const days = ["2026-06-29", "2026-06-30"];
+  const rows = [
+    { day: "2026-06-29", key: "Work", value: 2 },
+    { day: "2026-06-29", key: "Reading", value: 1 },
+    { day: "2026-06-30", key: "Work", value: 3 },
+  ];
+
+  it("lists the distinct keys sorted", () => {
+    expect(pivotDays(days, rows).keys).toEqual(["Reading", "Work"]);
+  });
+
+  it("produces one row per day with a column per key, zero when absent", () => {
+    const { data } = pivotDays(days, rows);
+    expect(data).toEqual([
+      { day: "2026-06-29", Work: 2, Reading: 1 },
+      { day: "2026-06-30", Work: 3, Reading: 0 },
+    ]);
   });
 });

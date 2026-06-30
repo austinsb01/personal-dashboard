@@ -1,7 +1,7 @@
 // Typed data access for the workouts feature. The only place its rows are read
 // or written. Day types and exercises are find-or-create (reused or created).
 
-import { and, asc, eq, sql } from "drizzle-orm";
+import { and, asc, between, eq, sql } from "drizzle-orm";
 
 import { db } from "@/db/client";
 import {

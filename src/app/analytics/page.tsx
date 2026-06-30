@@ -1,5 +1,6 @@
 import { RangeToggle } from "@/components/charts/range-toggle";
 import { NutritionSection } from "@/features/nutrition/components/nutrition-section";
+import { TimeSection } from "@/features/time/components/time-section";
 import { dayAxis, parseRange, rangeWindow } from "@/lib/analytics/range";
 import { todayIso } from "@/lib/iso-date";
 
@@ -26,6 +27,7 @@ export default async function AnalyticsPage({
         />
       </header>
       <NutritionSection from={from} to={to} days={days} />
+      <TimeSection from={from} to={to} days={days} />
     </div>
   );
 }

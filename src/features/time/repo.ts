@@ -1,6 +1,6 @@
 // Typed data access for time entries. The only place rows are read or written.
 
-import { and, desc, eq, isNull, isNotNull } from "drizzle-orm";
+import { and, desc, eq, gte, isNull, isNotNull, lt, sql } from "drizzle-orm";
 
 import { db } from "@/db/client";
 import { timeEntries } from "./schema";
@@ -25,6 +25,30 @@ export const timeRepo = {
       .from(timeEntries)
       .where(isNotNull(timeEntries.endedAt))
       .orderBy(desc(timeEntries.startedAt));
+  },
+
+  // Daily hours per activity over a window, for finished entries only.
+  dailyByActivity(from: string, to: string) {
+    const startBound = new Date(`${from}T00:00:00Z`);
+    const endBound = new Date(`${to}T00:00:00Z`);
+    endBound.setUTCDate(endBound.getUTCDate() + 1);
+    const day = sql<string>`to_char(${timeEntries.startedAt} AT TIME ZONE 'UTC', 'YYYY-MM-DD')`;
+    return db
+      .select({
+        day,
+        activity: timeEntries.activity,
+        hours: sql<number>`sum(extract(epoch from (${timeEntries.endedAt} - ${timeEntries.startedAt}))) / 3600`,
+      })
+      .from(timeEntries)
+      .where(
+        and(
+          isNotNull(timeEntries.endedAt),
+          gte(timeEntries.startedAt, startBound),
+          lt(timeEntries.startedAt, endBound),
+        ),
+      )
+      .groupBy(day, timeEntries.activity)
+      .orderBy(day);
   },
 
   // Stops any running entry, then opens a new one. Guarantees one timer runs.

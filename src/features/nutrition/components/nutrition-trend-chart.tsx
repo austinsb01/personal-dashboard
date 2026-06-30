@@ -17,6 +17,7 @@ import {
 } from "recharts";
 
 import { formatDay, formatDayShort } from "@/lib/iso-date";
+import { axisTick, gridStroke, tooltipStyle } from "@/components/charts/chart-theme";
 
 export type NutritionTrendPoint = {
   day: string;
@@ -24,16 +25,6 @@ export type NutritionTrendPoint = {
   proteinG: number;
   carbsG: number;
   fatG: number;
-};
-
-const axisTick = { fontSize: 11, fill: "var(--muted-foreground)" };
-
-const tooltipStyle = {
-  background: "var(--popover)",
-  border: "1px solid var(--border)",
-  borderRadius: "0.5rem",
-  fontSize: "12px",
-  color: "var(--popover-foreground)",
 };
 
 export function NutritionTrendChart({
@@ -44,7 +35,7 @@ export function NutritionTrendChart({
   return (
     <ResponsiveContainer width="100%" height="100%">
       <ComposedChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
-        <CartesianGrid vertical={false} stroke="var(--border)" />
+        <CartesianGrid vertical={false} stroke={gridStroke} />
         <XAxis
           dataKey="day"
           tickFormatter={formatDayShort}
