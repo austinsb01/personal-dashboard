@@ -13,3 +13,4 @@ schemas), and `components/` (UI).
 - `workouts/` - gym and workouts: per-day view, reusable day types and exercises, sets, and cardio.
 - `nutrition/` - food and nutrition: per-day view, a reusable food catalog with macros, and meal entries grouped by meal with daily totals.
 - `water/` - water intake: per-day tracker in fluid ounces with quick-add, a daily goal progress bar, and a deletable entries list.
+- `settings/` - editable daily targets (water goal and nutrition goals), stored as a singleton config row and used by the water and nutrition views and analytics.

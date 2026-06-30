@@ -7,8 +7,8 @@ against a daily goal as a progress bar. Lives under the Nutrition nav group at
 
 ## Contents
 
-- `constants.ts` - the fixed values in fluid ounces: the default daily goal, the
-  quick-add amounts, and the per-entry maximum. Single source of truth.
+- `constants.ts` - the quick-add amounts and the per-entry maximum (fluid ounces).
+  The daily goal now lives in the settings feature (user-editable).
 - `schema.ts` - the Drizzle `water_entries` table (one row per logged amount on a
   date). The single source of truth for the feature's types.
 - `validation.ts` - Zod validation for an added amount; the max comes from
