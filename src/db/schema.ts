@@ -7,3 +7,4 @@ export * from "../features/time/schema";
 export * from "../features/workouts/schema";
 export * from "../features/nutrition/schema";
 export * from "../features/water/schema";
+export * from "../features/settings/schema";
