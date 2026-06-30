@@ -8,3 +8,5 @@ timestamps. One vertical slice (schema, repo, actions, validation, UI).
 
 - `schema.ts` - the Drizzle `time_entries` table. The single source of truth
   that the repository and derived types build on.
+- Analytics: `timeRepo.dailyByActivity` plus `components/` (a time section and a
+  stacked hours-by-activity chart) feed the analytics page.

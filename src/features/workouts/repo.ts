@@ -1,7 +1,7 @@
 // Typed data access for the workouts feature. The only place its rows are read
 // or written. Day types and exercises are find-or-create (reused or created).
 
-import { and, asc, eq, sql } from "drizzle-orm";
+import { and, asc, between, eq, sql } from "drizzle-orm";
 
 import { db } from "@/db/client";
 import {
@@ -111,6 +111,35 @@ export const workoutsRepo = {
       .innerJoin(exercises, eq(strengthSets.exerciseId, exercises.id))
       .where(eq(workouts.workoutDayId, workoutDayId))
       .orderBy(asc(exercises.name));
+  },
+
+  // Distinct strength-exercise names that have logged sets (for the picker).
+  listExercisesWithSets() {
+    return db
+      .selectDistinct({ name: exercises.name })
+      .from(strengthSets)
+      .innerJoin(exercises, eq(strengthSets.exerciseId, exercises.id))
+      .orderBy(asc(exercises.name));
+  },
+
+  // Total volume (sum reps*weight) per session date for an exercise, in a window.
+  exerciseVolumeByDate(exerciseName: string, from: string, to: string) {
+    return db
+      .select({
+        day: workouts.performedOn,
+        volume: sql<number>`sum(${strengthSets.reps} * ${strengthSets.weight})`,
+      })
+      .from(strengthSets)
+      .innerJoin(workouts, eq(strengthSets.workoutId, workouts.id))
+      .innerJoin(exercises, eq(strengthSets.exerciseId, exercises.id))
+      .where(
+        and(
+          sql`lower(${exercises.name}) = lower(${exerciseName})`,
+          between(workouts.performedOn, from, to),
+        ),
+      )
+      .groupBy(workouts.performedOn)
+      .orderBy(asc(workouts.performedOn));
   },
 
   // Adds a strength set to a workout (find-or-creates the exercise).

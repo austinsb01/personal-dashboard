@@ -2,7 +2,7 @@
 
 import { describe, expect, it } from "vitest";
 
-import { addDays, formatDay, isIsoDate, todayIso } from "./iso-date";
+import { addDays, formatDay, formatDayShort, isIsoDate, todayIso } from "./iso-date";
 
 describe("isIsoDate", () => {
   it("accepts a well-formed YYYY-MM-DD string", () => {
@@ -38,6 +38,12 @@ describe("addDays", () => {
 describe("formatDay", () => {
   it("formats an ISO day as a short weekday and date", () => {
     expect(formatDay("2026-06-29")).toBe("Mon, Jun 29");
+  });
+});
+
+describe("formatDayShort", () => {
+  it("formats an ISO day as a short month and day", () => {
+    expect(formatDayShort("2026-06-29")).toBe("Jun 29");
   });
 });
 

@@ -1,6 +1,6 @@
 // Typed data access for goals. The only place goal rows are read or written.
 
-import { desc, eq } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 
 import { db } from "@/db/client";
 import { goals } from "./schema";
@@ -10,6 +10,14 @@ export const goalsRepo = {
   // Returns all goals, newest first.
   async findAll() {
     return db.select().from(goals).orderBy(desc(goals.createdAt));
+  },
+
+  // Title and current progress for every goal, most complete first.
+  listProgress() {
+    return db
+      .select({ title: goals.title, progress: goals.progress })
+      .from(goals)
+      .orderBy(desc(goals.progress), asc(goals.title));
   },
 
   // Inserts a goal and returns the created row.
