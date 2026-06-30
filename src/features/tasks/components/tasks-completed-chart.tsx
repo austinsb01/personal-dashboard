@@ -4,9 +4,9 @@
 // Presentational; counts are aggregated and gap-filled server-side.
 
 import {
-  Bar,
-  BarChart,
   CartesianGrid,
+  Line,
+  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -26,7 +26,7 @@ export type WeeklyCountPoint = { day: string; count: number };
 export function TasksCompletedChart({ data }: { data: WeeklyCountPoint[] }) {
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <BarChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
+      <LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
         <CartesianGrid vertical={false} stroke={gridStroke} />
         <XAxis
           dataKey="day"
@@ -41,8 +41,14 @@ export function TasksCompletedChart({ data }: { data: WeeklyCountPoint[] }) {
           contentStyle={tooltipStyle}
           labelFormatter={(label) => `Week of ${formatDay(String(label))}`}
         />
-        <Bar dataKey="count" name="Completed" fill={CHART_COLORS[0]} radius={[3, 3, 0, 0]} />
-      </BarChart>
+        <Line
+          type="monotone"
+          dataKey="count"
+          name="Completed"
+          stroke={CHART_COLORS[0]}
+          dot={{ r: 2 }}
+        />
+      </LineChart>
     </ResponsiveContainer>
   );
 }

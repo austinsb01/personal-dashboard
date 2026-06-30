@@ -1,5 +1,6 @@
 import { RangeToggle } from "@/components/charts/range-toggle";
 import { NutritionSection } from "@/features/nutrition/components/nutrition-section";
+import { WaterSection } from "@/features/water/components/water-section";
 import { TimeSection } from "@/features/time/components/time-section";
 import { WorkoutSection } from "@/features/workouts/components/workout-section";
 import { TaskSection } from "@/features/tasks/components/task-section";
@@ -32,11 +33,12 @@ export default async function AnalyticsPage({
       <div className="flex flex-col gap-4">
         <NutritionSection from={from} to={to} days={days} />
         <div className="grid gap-4 sm:grid-cols-2">
+          <WaterSection from={from} to={to} days={days} />
           <TimeSection from={from} to={to} days={days} />
           <WorkoutSection from={from} to={to} range={range} exercise={params.exercise} />
-          <TaskSection from={from} to={to} />
           <GoalSection />
         </div>
+        <TaskSection from={from} to={to} />
       </div>
     </div>
   );
