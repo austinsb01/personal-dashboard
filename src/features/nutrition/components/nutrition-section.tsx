@@ -4,6 +4,7 @@
 import { ChartCard } from "@/components/charts/chart-card";
 import { fillDays } from "@/lib/analytics/series";
 import { nutritionRepo } from "@/features/nutrition/repo";
+import { settingsRepo } from "@/features/settings/repo";
 import {
   NutritionTrendChart,
   type NutritionTrendPoint,
@@ -24,7 +25,10 @@ export async function NutritionSection({
   to: string;
   days: string[];
 }) {
-  const rows = await nutritionRepo.dailyTotals(from, to);
+  const [rows, targets] = await Promise.all([
+    nutritionRepo.dailyTotals(from, to),
+    settingsRepo.getTargets(),
+  ]);
   const data: NutritionTrendPoint[] = fillDays(
     days,
     rows.map((row) => ({
@@ -38,7 +42,11 @@ export async function NutritionSection({
   );
   return (
     <ChartCard title="Nutrition" description="Daily calories and macros">
-      <NutritionTrendChart data={data} />
+      <NutritionTrendChart
+        data={data}
+        calorieGoal={targets.calories}
+        proteinGoal={targets.proteinG}
+      />
     </ChartCard>
   );
 }

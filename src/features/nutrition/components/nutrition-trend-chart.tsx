@@ -10,6 +10,7 @@ import {
   ComposedChart,
   Legend,
   Line,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -29,8 +30,12 @@ export type NutritionTrendPoint = {
 
 export function NutritionTrendChart({
   data,
+  calorieGoal,
+  proteinGoal,
 }: {
   data: NutritionTrendPoint[];
+  calorieGoal: number;
+  proteinGoal: number;
 }) {
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -51,6 +56,8 @@ export function NutritionTrendChart({
           labelFormatter={(label) => formatDay(String(label))}
         />
         <Legend wrapperStyle={{ fontSize: "12px" }} />
+        <ReferenceLine yAxisId="cal" y={calorieGoal} stroke="var(--chart-1)" strokeDasharray="4 4" />
+        <ReferenceLine yAxisId="macro" y={proteinGoal} stroke="var(--chart-2)" strokeDasharray="4 4" />
         <Area
           yAxisId="cal"
           type="monotone"
