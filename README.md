@@ -77,6 +77,31 @@ pnpm start   # serve the production build at http://localhost:3000
 The worker is also generated on every Vercel production deploy, which is where
 the installable app actually lives.
 
+## Deploying (Vercel)
+
+The app deploys on Vercel with a Neon Postgres database, and is kept private with
+Vercel Deployment Protection (no in-app login).
+
+1. **Create the database.** In Neon, create a project and copy the pooled
+   connection string (Connect, then Connection string).
+2. **Import the repo into Vercel.** New Project, then import this GitHub repo.
+   Vercel auto-detects Next.js; no build configuration is needed.
+3. **Set the environment variable.** In the Vercel project settings, add
+   `DATABASE_URL` (the Neon pooled string) for Production (and Preview if used).
+   It is validated at startup by `src/lib/env.ts`, so a missing or malformed
+   value fails the boot with a clear error.
+4. **Apply migrations.** The build does not touch the database (it stays
+   decoupled), so apply migrations yourself. With your `.env` `DATABASE_URL`
+   pointing at the target database, run `pnpm db:migrate`. For a single-user
+   setup the dev and production database can be the same Neon project; otherwise
+   point `.env` at the production database and run it again. Re-run whenever new
+   migrations ship.
+5. **Deploy.** Push to the default branch (or trigger a deploy from the Vercel
+   dashboard). The production build also generates the service worker.
+6. **Lock it down.** In the Vercel project: Settings, then Deployment Protection,
+   then enable Vercel Authentication (or a password). This is the app's access
+   control; there is no in-app login.
+
 ## Roadmap
 
 - [x] Phase 0, Foundation: stack decision, README, `.gitignore`, project conventions.
