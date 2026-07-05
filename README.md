@@ -1,7 +1,7 @@
 # Personal Dashboard
 
 A self-hosted personal dashboard to organize and track the things I care about: tasks,
-goals, time, workouts, and nutrition, in one place, accessible from any device.
+goals, time, workouts, nutrition, and water, in one place, accessible from any device.
 
 > Status: Installable PWA with a Notion-style design language. A collapsible blue-grey sidebar,
 > light and dark themes with a toggle, a polished app shell, and a web manifest, app icons,
@@ -10,8 +10,10 @@ goals, time, workouts, and nutrition, in one place, accessible from any device.
 > due date, complete, delete), goals (progress, target date), time tracking (start/stop timer
 > with daily totals), gym workouts (per-day strength sets and cardio, reusable day types
 > and exercises), food and nutrition (per-day meal log over a reusable food catalog, grouped
-> by meal with daily macro totals), and analytics (Recharts trends for nutrition, time, workout
-> volume, and task/goal completion over a selectable window). Polish and deploy is next. See the
+> by meal with daily macro totals), water intake (per-day quick-add against a daily goal),
+> analytics (Recharts trends for nutrition, water, time, workout volume, and task/goal completion
+> over a selectable window), and editable daily targets (a settings page driving progress bars and
+> goal reference lines across water and nutrition). Polish and deploy is in progress. See the
 > [Roadmap](#roadmap).
 
 ## Goals
@@ -21,14 +23,17 @@ goals, time, workouts, and nutrition, in one place, accessible from any device.
 - Accessible anywhere: log a workout or meal from my phone, review trends on my laptop.
 - My data, private: single-user, kept private behind deployment-level access protection.
 
-## Planned Features
+## Features
 
 | Area | What it does |
 | --- | --- |
 | To-do and goals | Tasks with priorities and due dates; longer-term goals with progress. |
-| Time tracking | Log time spent on activities; see daily and weekly totals and trends. |
+| Time tracking | Log time spent on activities; see daily totals and trends. |
 | Gym and workouts | Log exercises, sets, reps, and weights; track progression over time. |
-| Food and nutrition | Log meals with calories and macros; daily summaries and trends. |
+| Food and nutrition | Log meals with calories and macros; daily summaries against targets. |
+| Water | Quick-add water intake against a daily goal, with a progress bar. |
+| Analytics | Recharts trends across every area over a selectable 7/30/90-day window. |
+| Daily targets | A settings page to set water and nutrition goals, shown as progress bars and chart goal lines. |
 
 ## Tech Stack
 
@@ -42,7 +47,7 @@ goals, time, workouts, and nutrition, in one place, accessible from any device.
 | ORM | [Drizzle ORM](https://orm.drizzle.team/) | TypeScript-first, lightweight, immutable-friendly. |
 | Access control | [Vercel Deployment Protection](https://vercel.com/docs/deployment-protection) | Keeps the deployed app private without an in-app login (single-user). |
 | Validation | [Zod](https://zod.dev/) | Schema validation at every system boundary. |
-| Charts | [Recharts](https://recharts.org/) | Trends for time and nutrition. |
+| Charts | [Recharts](https://recharts.org/) | Trends across every tracked area on the analytics page. |
 | Testing | [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/) + [Playwright](https://playwright.dev/) | Unit, integration, and E2E coverage. |
 | Hosting | [Vercel](https://vercel.com/) | First-class Next.js deployment. |
 | Package manager | [pnpm](https://pnpm.io/) | Fast, disk-efficient installs. |
