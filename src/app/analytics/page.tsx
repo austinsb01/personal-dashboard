@@ -1,4 +1,5 @@
 import { RangeToggle } from "@/components/charts/range-toggle";
+import { PageHeader } from "@/components/page-header";
 import { NutritionSection } from "@/features/nutrition/components/nutrition-section";
 import { WaterSection } from "@/features/water/components/water-section";
 import { TimeSection } from "@/features/time/components/time-section";
@@ -21,15 +22,17 @@ export default async function AnalyticsPage({
   const days = dayAxis(from, to);
 
   return (
-    <div className="flex flex-col gap-6">
-      <header className="flex items-center justify-between gap-3">
-        <h1 className="text-xl font-semibold tracking-tight">Analytics</h1>
-        <RangeToggle
-          basePath="/analytics"
-          active={range}
-          params={{ exercise: params.exercise }}
-        />
-      </header>
+    <div className="flex flex-col gap-8">
+      <PageHeader
+        title="Analytics"
+        action={
+          <RangeToggle
+            basePath="/analytics"
+            active={range}
+            params={{ exercise: params.exercise }}
+          />
+        }
+      />
       <div className="flex flex-col gap-4">
         <NutritionSection from={from} to={to} days={days} />
         <div className="grid gap-4 sm:grid-cols-2">
