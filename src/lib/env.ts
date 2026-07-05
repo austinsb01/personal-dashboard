@@ -5,6 +5,8 @@ import { z } from "zod";
 
 const envSchema = z.object({
   DATABASE_URL: z.url(),
+  APP_PASSWORD: z.string().min(8, "APP_PASSWORD must be at least 8 characters"),
+  AUTH_SECRET: z.string().min(16, "AUTH_SECRET must be at least 16 characters"),
 });
 
 // Parses process.env against the schema; fails fast with readable errors.
