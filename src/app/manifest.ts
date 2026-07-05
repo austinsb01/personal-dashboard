@@ -7,6 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description:
       "Track to-dos and goals, time spent, gym workouts, and nutrition in one place.",
     start_url: "/",
+    id: "/",
+    scope: "/",
     display: "standalone",
     background_color: "#1d242a",
     theme_color: "#1d242a",
