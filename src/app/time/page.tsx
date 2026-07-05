@@ -1,6 +1,7 @@
 import { timeRepo } from "@/features/time/repo";
 import { Timer } from "@/features/time/components/timer";
 import { TimeEntryList } from "@/features/time/components/time-entry-list";
+import { PageHeader } from "@/components/page-header";
 
 export const dynamic = "force-dynamic";
 
@@ -10,12 +11,10 @@ export default async function TimePage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <header className="flex flex-col gap-1.5">
-        <h1 className="text-3xl font-semibold tracking-tight">Time</h1>
-        <p className="text-sm text-muted-foreground">
-          Start a timer for an activity; see daily totals below.
-        </p>
-      </header>
+      <PageHeader
+        title="Time"
+        description="Start a timer for an activity; see daily totals below."
+      />
       <Timer
         running={
           running
