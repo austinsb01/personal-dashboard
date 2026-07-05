@@ -1,7 +1,8 @@
-// Access gate: every app route requires a valid signed session cookie. Requests
-// without one are redirected to /login; valid sessions get a sliding refresh.
-// The pathname is forwarded to the root layout so /login can render without the
-// dashboard shell. Next internals and public PWA/static assets are excluded.
+// Access gate (Next.js Proxy): every app route requires a valid signed session
+// cookie. Requests without one are redirected to /login; valid sessions get a
+// sliding refresh. The pathname is forwarded to the root layout so /login can
+// render without the dashboard shell. Next internals and public PWA/static
+// assets are excluded.
 
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -22,7 +23,7 @@ const cookieOptions = {
   maxAge: SESSION_MAX_AGE,
 };
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const requestHeaders = new Headers(request.headers);

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
+import { headers } from "next/headers";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { ThemeProvider } from "@/components/theme-provider";
 
@@ -35,11 +36,13 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = (await headers()).get("x-pathname") ?? "";
+  const isAuthScreen = pathname === "/login";
   return (
     <html
       lang="en"
@@ -53,7 +56,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <DashboardShell>{children}</DashboardShell>
+          {isAuthScreen ? children : <DashboardShell>{children}</DashboardShell>}
         </ThemeProvider>
       </body>
     </html>
