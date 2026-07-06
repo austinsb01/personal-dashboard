@@ -1,34 +1,12 @@
 // Typed data access for the nutrition feature. The only place its rows are read
-// or written. Foods are find-or-create by name (case-insensitive), so logging a
-// known food reuses its catalog row and stored macros.
+// or written. Food find-or-create lives in ./foods so recipes reuse it.
 
 import { asc, between, eq, sql } from "drizzle-orm";
 
 import { db } from "@/db/client";
 import { foods, mealEntries } from "./schema";
+import { findOrCreateFood } from "./foods";
 import type { LogEntryInput } from "./validation";
-
-// Returns the food row for a name (case-insensitive), creating it if needed.
-async function findOrCreateFood(input: LogEntryInput) {
-  const byName = sql`lower(${foods.name}) = lower(${input.name})`;
-  const [existing] = await db.select().from(foods).where(byName).limit(1);
-  if (existing) return existing;
-  const [created] = await db
-    .insert(foods)
-    .values({
-      name: input.name,
-      servingLabel: input.servingLabel,
-      calories: input.calories,
-      proteinG: input.proteinG,
-      carbsG: input.carbsG,
-      fatG: input.fatG,
-    })
-    .onConflictDoNothing()
-    .returning();
-  if (created) return created;
-  const [row] = await db.select().from(foods).where(byName).limit(1);
-  return row;
-}
 
 export const nutritionRepo = {
   // Full food catalog, for autocomplete and macro autofill.
