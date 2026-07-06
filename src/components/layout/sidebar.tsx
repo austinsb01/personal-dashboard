@@ -29,12 +29,21 @@ function isActiveRoute(href: string, pathname: string): boolean {
 
 // Renders one nav row. Active rows use a filled, slightly elevated pill so
 // they read distinctly from the lighter hover state on inactive rows.
-function NavRow({ item, pathname }: { item: NavLeaf; pathname: string }) {
+function NavRow({
+  item,
+  pathname,
+  onNavigate,
+}: {
+  item: NavLeaf;
+  pathname: string;
+  onNavigate?: () => void;
+}) {
   const Icon = item.icon;
   const active = isActiveRoute(item.href, pathname);
   return (
     <Link
       href={item.href}
+      onClick={onNavigate}
       aria-current={active ? "page" : undefined}
       className={cn(
         "flex items-center gap-3 rounded-lg px-2.5 py-2 text-sm transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring",
@@ -54,9 +63,11 @@ function NavRow({ item, pathname }: { item: NavLeaf; pathname: string }) {
 function CollapsibleGroup({
   group,
   pathname,
+  onNavigate,
 }: {
   group: NavGroup;
   pathname: string;
+  onNavigate?: () => void;
 }) {
   const [open, setOpen] = useState(true);
   return (
@@ -84,7 +95,12 @@ function CollapsibleGroup({
         <div className="overflow-hidden">
           <div className="flex flex-col gap-1 pt-1 pl-4">
             {group.items.map((item) => (
-              <NavRow key={item.href} item={item} pathname={pathname} />
+              <NavRow
+                key={item.href}
+                item={item}
+                pathname={pathname}
+                onNavigate={onNavigate}
+              />
             ))}
           </div>
         </div>
@@ -93,7 +109,7 @@ function CollapsibleGroup({
   );
 }
 
-export function Sidebar() {
+export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
 
   return (
@@ -107,10 +123,15 @@ export function Sidebar() {
         </span>
         <span className="text-sm font-semibold">Personal Dashboard</span>
       </div>
-      <NavRow item={NAV_OVERVIEW} pathname={pathname} />
+      <NavRow item={NAV_OVERVIEW} pathname={pathname} onNavigate={onNavigate} />
       <div className="mt-2 flex flex-col gap-2">
         {NAV_GROUPS.map((group) => (
-          <CollapsibleGroup key={group.label} group={group} pathname={pathname} />
+          <CollapsibleGroup
+            key={group.label}
+            group={group}
+            pathname={pathname}
+            onNavigate={onNavigate}
+          />
         ))}
       </div>
       <div className="mt-auto flex flex-col gap-1 border-t pt-2">
