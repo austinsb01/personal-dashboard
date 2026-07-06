@@ -10,7 +10,9 @@ goals, time, workouts, nutrition, and water, in one place, accessible from any d
 > due date, complete, delete), goals (progress, target date), time tracking (start/stop timer
 > with daily totals), gym workouts (per-day strength sets and cardio, reusable day types
 > and exercises), food and nutrition (per-day meal log over a reusable food catalog, grouped
-> by meal with daily macro totals), water intake (per-day quick-add against a daily goal),
+> by meal with daily macro totals), reusable recipes logged to a day in one tap and a
+weekly meal-prep view that rolls up a week's ingredients with macros against targets,
+water intake (per-day quick-add against a daily goal),
 > analytics (Recharts trends for nutrition, water, time, workout volume, and task/goal completion
 > over a selectable window), and editable daily targets (a settings page driving progress bars and
 > goal reference lines across water and nutrition). Polish and deploy is in progress. See the
@@ -31,6 +33,7 @@ goals, time, workouts, nutrition, and water, in one place, accessible from any d
 | Time tracking | Log time spent on activities; see daily totals and trends. |
 | Gym and workouts | Log exercises, sets, reps, and weights; track progression over time. |
 | Food and nutrition | Log meals with calories and macros; daily summaries against targets. |
+| Meal prep | Reusable recipes logged in one tap; a weekly ingredient rollup with macros against targets. |
 | Water | Quick-add water intake against a daily goal, with a progress bar. |
 | Analytics | Recharts trends across every area over a selectable 7/30/90-day window. |
 | Daily targets | A settings page to set water and nutrition goals, shown as progress bars and chart goal lines. |
@@ -121,7 +124,8 @@ Vercel Deployment Protection (no in-app login).
 - [x] Phase 9, Analytics: charts and trends across the tracked data (Recharts) on the analytics page over a selectable 7/30/90-day window: daily calories and macros, hours stacked by activity, workout volume per session (with an exercise picker), tasks completed per week, and goal progress. Server-side SQL aggregation feeds presentational client charts; shared range and series helpers are unit-tested.
 - [x] Phase 10, Water: a per-day water tracker under the Nutrition area (its own `water_entries` slice and `/water` page) with quick-add buttons (8/12/16 oz) and a custom amount, a daily total against a goal shown as a progress bar, and a deletable entries list. Adds a daily water-intake chart (with a goal reference line) to the analytics page.
 - [x] Phase 11, Daily targets: a `/settings` page to set daily targets (the water goal in oz, and calorie/protein/carbs/fat goals for nutrition), stored in a singleton `daily_targets` table. The water and nutrition day views show progress against these targets, and the nutrition analytics chart gains goal reference lines.
-- [ ] Phase 12, Polish and deploy (current): global UI consistency pass, PWA finalization, Vercel deploy, and Vercel deployment protection (password/SSO gate) to keep the app private without an in-app login.
+- [x] Phase 12, Meal prep and ingredient grouping: reusable recipes (a named meal built from catalog foods) that log to a day in one action and appear grouped in the day view, plus a weekly `/meal-prep` view that rolls up a week's ingredients with total macros against daily targets and links each ingredient to the recipes and days that use it. Logging a recipe flattens into tagged `meal_entries`, so existing daily totals and analytics are unchanged. New `recipes` and `recipe_items` tables and a nullable `meal_entries.source_recipe_id`.
+- [ ] Phase 13, Polish and deploy (current): global UI consistency pass, PWA finalization, Vercel deploy, and Vercel deployment protection (password/SSO gate) to keep the app private without an in-app login.
 
 ## License
 
