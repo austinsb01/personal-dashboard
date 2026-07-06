@@ -1,36 +1,18 @@
 // Zod validation for recipes: a recipe is a name, optional note, and one or more
 // items (a food with per-serving macros and a quantity). logRecipeSchema
-// validates logging an existing recipe into a day's meal. Numeric fields are
-// coerced from FormData strings. Food-macro constraints mirror the meal-log
-// schema so the shared foods catalog stays consistent.
+// validates logging an existing recipe into a day's meal. Item macro fields and
+// the meal-type list are shared with the meal-log schema (single source of truth).
 
 import { z } from "zod";
 
-import { mealType } from "../nutrition/schema";
+import {
+  MEAL_TYPES,
+  foodMacrosSchema,
+  quantitySchema,
+  nameField,
+} from "../nutrition/validation";
 
-export const MEAL_TYPES = mealType.enumValues;
-
-function nameField(label: string) {
-  return z
-    .string()
-    .trim()
-    .min(1, `${label} is required`)
-    .max(80, `${label} must be 80 characters or fewer`);
-}
-
-export const recipeItemSchema = z.object({
-  name: nameField("Food"),
-  servingLabel: nameField("Serving"),
-  calories: z.coerce
-    .number()
-    .int("Calories must be a whole number")
-    .min(0, "Calories cannot be negative")
-    .max(100000),
-  proteinG: z.coerce.number().min(0, "Protein cannot be negative").max(10000),
-  carbsG: z.coerce.number().min(0, "Carbs cannot be negative").max(10000),
-  fatG: z.coerce.number().min(0, "Fat cannot be negative").max(10000),
-  quantity: z.coerce.number().positive("Quantity must be greater than 0").max(1000),
-});
+export const recipeItemSchema = foodMacrosSchema.extend({ quantity: quantitySchema });
 
 export const recipeSchema = z.object({
   name: nameField("Recipe name"),

@@ -9,7 +9,7 @@ import { mealType } from "./schema";
 // The meal-type values, derived from the Drizzle enum (single source of truth).
 export const MEAL_TYPES = mealType.enumValues;
 
-function nameField(label: string) {
+export function nameField(label: string) {
   return z
     .string()
     .trim()
@@ -17,7 +17,7 @@ function nameField(label: string) {
     .max(80, `${label} must be 80 characters or fewer`);
 }
 
-export const logEntrySchema = z.object({
+export const foodMacrosSchema = z.object({
   name: nameField("Food"),
   servingLabel: nameField("Serving"),
   calories: z.coerce
@@ -28,11 +28,16 @@ export const logEntrySchema = z.object({
   proteinG: z.coerce.number().min(0, "Protein cannot be negative").max(10000),
   carbsG: z.coerce.number().min(0, "Carbs cannot be negative").max(10000),
   fatG: z.coerce.number().min(0, "Fat cannot be negative").max(10000),
+});
+
+export const quantitySchema = z.coerce
+  .number()
+  .positive("Quantity must be greater than 0")
+  .max(1000);
+
+export const logEntrySchema = foodMacrosSchema.extend({
   mealType: z.enum(MEAL_TYPES),
-  quantity: z.coerce
-    .number()
-    .positive("Quantity must be greater than 0")
-    .max(1000),
+  quantity: quantitySchema,
 });
 
 export type LogEntryInput = z.infer<typeof logEntrySchema>;
