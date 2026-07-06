@@ -16,6 +16,7 @@ import {
   type NavLeaf,
 } from "@/lib/navigation";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { LogoutButton } from "@/features/auth/components/logout-button";
 
 // Returns true when a nav href is the active route. The overview route ("/")
 // matches only an exact path; other routes also match their nested paths.
@@ -112,8 +113,9 @@ export function Sidebar() {
           <CollapsibleGroup key={group.label} group={group} pathname={pathname} />
         ))}
       </div>
-      <div className="mt-auto border-t pt-2">
+      <div className="mt-auto flex flex-col gap-1 border-t pt-2">
         <ThemeToggle />
+        <LogoutButton />
       </div>
     </nav>
   );
