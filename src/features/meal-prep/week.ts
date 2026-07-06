@@ -77,6 +77,7 @@ export function summarizeWeekDays(range: WeekRange, entries: RangeEntry[]): DayS
 
 // Groups every entry in the week by food, summing servings and macros, and
 // records the recipes (or "Direct") and days that used it. Sorted by calories.
+// Uses a local per-food accumulator map; inputs are never mutated.
 export function rollUpIngredients(entries: RangeEntry[]): IngredientRollup[] {
   const byFood = new Map<string, IngredientRollup>();
   const seenUse = new Set<string>();
@@ -90,7 +91,7 @@ export function rollUpIngredients(entries: RangeEntry[]): IngredientRollup[] {
         totals: { calories: 0, proteinG: 0, carbsG: 0, fatG: 0 },
         usedIn: [],
       };
-    existing.totalQuantity = round1(existing.totalQuantity + entry.quantity);
+    existing.totalQuantity = existing.totalQuantity + entry.quantity;
     existing.totals = {
       calories: existing.totals.calories + entry.calories * entry.quantity,
       proteinG: existing.totals.proteinG + entry.proteinG * entry.quantity,
@@ -107,6 +108,7 @@ export function rollUpIngredients(entries: RangeEntry[]): IngredientRollup[] {
   }
   const rollups = [...byFood.values()].map((r) => ({
     ...r,
+    totalQuantity: round1(r.totalQuantity),
     totals: {
       calories: Math.round(r.totals.calories),
       proteinG: round1(r.totals.proteinG),

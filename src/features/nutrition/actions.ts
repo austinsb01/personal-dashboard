@@ -56,7 +56,7 @@ export async function logRecipeAction(
   const parsed = logRecipeSchema.safeParse({
     recipeId: formData.get("recipeId"),
     mealType: formData.get("mealType"),
-    multiplier: formData.get("multiplier") ?? undefined,
+    multiplier: formData.get("multiplier") || undefined,
   });
   if (!parsed.success) return { ok: false, errors: z.flattenError(parsed.error).fieldErrors };
   try {

@@ -87,6 +87,7 @@ export type MealGroup = FoodGroup | RecipeGroup;
 
 // Collapses a meal's entries so those sharing a source recipe render as one
 // group (order preserved by first appearance); untagged foods stay standalone.
+// Uses a local per-recipe accumulator; inputs are never mutated.
 export function groupMealEntries(entries: DayEntry[]): MealGroup[] {
   const groups: MealGroup[] = [];
   const byRecipe = new Map<string, RecipeGroup>();
