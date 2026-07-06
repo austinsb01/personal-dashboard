@@ -10,16 +10,15 @@ import { foods } from "../nutrition/schema";
 import { findOrCreateFood } from "../nutrition/foods";
 import type { RecipeInput } from "./validation";
 
-async function replaceItems(recipeId: string, input: RecipeInput) {
-  await db.delete(recipeItems).where(eq(recipeItems.recipeId, recipeId));
+// Resolves each recipe item's food (find-or-create) into a foodId+quantity row,
+// before any recipe row is written.
+async function resolveItems(input: RecipeInput) {
+  const resolved: { foodId: string; quantity: number }[] = [];
   for (const item of input.items) {
     const food = await findOrCreateFood(item);
-    await db.insert(recipeItems).values({
-      recipeId,
-      foodId: food.id,
-      quantity: item.quantity,
-    });
+    resolved.push({ foodId: food.id, quantity: item.quantity });
   }
+  return resolved;
 }
 
 export const recipesRepo = {
@@ -53,22 +52,41 @@ export const recipesRepo = {
     return { ...recipe, items };
   },
 
-  // Creates a recipe and its items (find-or-creating each food).
+  // Creates a recipe and its items. Foods are resolved first so a bad ingredient
+  // fails before any row is written; item rows insert in one statement, and the
+  // recipe is removed if that insert fails (the neon-http driver has no
+  // transactions, so failure is compensated manually).
   async createRecipe(input: RecipeInput) {
+    const items = await resolveItems(input);
     const [recipe] = await db
       .insert(recipes)
       .values({ name: input.name, note: input.note ?? null })
       .returning();
-    await replaceItems(recipe.id, input);
+    if (items.length === 0) return;
+    try {
+      await db.insert(recipeItems).values(
+        items.map((item) => ({ recipeId: recipe.id, ...item })),
+      );
+    } catch (error) {
+      await db.delete(recipes).where(eq(recipes.id, recipe.id));
+      throw error;
+    }
   },
 
-  // Updates a recipe's name/note and replaces its items.
+  // Updates a recipe's name/note and replaces its items in one insert. Foods are
+  // resolved before the update (the neon-http driver has no transactions).
   async updateRecipe(id: string, input: RecipeInput) {
+    const items = await resolveItems(input);
     await db
       .update(recipes)
       .set({ name: input.name, note: input.note ?? null })
       .where(eq(recipes.id, id));
-    await replaceItems(id, input);
+    await db.delete(recipeItems).where(eq(recipeItems.recipeId, id));
+    if (items.length > 0) {
+      await db.insert(recipeItems).values(
+        items.map((item) => ({ recipeId: id, ...item })),
+      );
+    }
   },
 
   // Deletes a recipe. Items cascade; logged entries keep their food and go
