@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { summarizeDay, type DayEntry } from "@/features/nutrition/totals";
 import type { FoodOption } from "@/features/nutrition/components/nutrition-forms";
+import { FoodSuggestionsDatalist } from "@/features/nutrition/components/food-suggestions-datalist";
 import {
   createRecipeAction,
   updateRecipeAction,
@@ -117,11 +118,7 @@ export function RecipeEditor({
       <Input name="recipeName" defaultValue={initialName} placeholder="Recipe name" aria-label="Recipe name" required />
       <Input name="note" defaultValue={initialNote} placeholder="Note (optional)" aria-label="Note" />
 
-      <datalist id="recipe-food-suggestions">
-        {foods.map((food) => (
-          <option key={food.name} value={food.name} />
-        ))}
-      </datalist>
+      <FoodSuggestionsDatalist id="recipe-food-suggestions" foods={foods} />
 
       <div className="flex flex-col gap-2">
         {rows.map((row, index) => (

@@ -20,14 +20,20 @@ export type RecipeFormState = {
 // Rebuilds the recipe items array from name[i]/servingLabel[i]/... FormData keys.
 function readItems(formData: FormData) {
   const names = formData.getAll("name");
-  return names.map((_, i) => ({
-    name: formData.getAll("name")[i],
-    servingLabel: formData.getAll("servingLabel")[i],
-    calories: formData.getAll("calories")[i],
-    proteinG: formData.getAll("proteinG")[i],
-    carbsG: formData.getAll("carbsG")[i],
-    fatG: formData.getAll("fatG")[i],
-    quantity: formData.getAll("quantity")[i],
+  const servingLabels = formData.getAll("servingLabel");
+  const calories = formData.getAll("calories");
+  const proteinG = formData.getAll("proteinG");
+  const carbsG = formData.getAll("carbsG");
+  const fatG = formData.getAll("fatG");
+  const quantities = formData.getAll("quantity");
+  return names.map((name, i) => ({
+    name,
+    servingLabel: servingLabels[i],
+    calories: calories[i],
+    proteinG: proteinG[i],
+    carbsG: carbsG[i],
+    fatG: fatG[i],
+    quantity: quantities[i],
   }));
 }
 
