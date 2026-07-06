@@ -1,6 +1,7 @@
 // Server-rendered nutrition day view: a date header with prev/next navigation,
-// a log form, and the day's foods grouped by meal with per-meal and day totals.
-// All nutrition math comes from the pure totals helper.
+// log forms, and the day's foods grouped by meal with per-meal and day totals.
+// Entries sharing a source recipe collapse under the recipe name. All nutrition
+// math comes from the pure totals helper.
 
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
@@ -11,18 +12,23 @@ import {
   LogFoodForm,
   type FoodOption,
 } from "@/features/nutrition/components/nutrition-forms";
+import { LogRecipeForm } from "@/features/nutrition/components/log-recipe-form";
 import {
   summarizeDay,
   entryTotals,
+  groupMealEntries,
   type DayEntry,
   type Totals,
+  type MealGroup,
 } from "@/features/nutrition/totals";
 import { TargetsProgress } from "@/features/nutrition/components/targets-progress";
 import type { Targets } from "@/features/settings/repo";
+import type { RecipeListItem } from "@/features/recipes/repo";
 
 type DayViewProps = {
   date: string;
   foods: FoodOption[];
+  recipes: RecipeListItem[];
   targets: Targets;
   entries: DayEntry[];
 };
@@ -38,7 +44,31 @@ function macroLine(totals: Totals): string {
   return `${totals.calories} cal · ${totals.proteinG}p · ${totals.carbsG}c · ${totals.fatG}f`;
 }
 
-export function DayView({ date, foods, targets, entries }: DayViewProps) {
+// Flattens meal groups into display rows: a recipe group renders as one labeled
+// row (no per-row delete in v1); a single food keeps its own delete action.
+function groupRows(groups: MealGroup[]) {
+  return groups.map((group) =>
+    group.kind === "food"
+      ? {
+          key: group.entry.id,
+          name: group.entry.foodName,
+          sub: `${group.entry.quantity} × ${group.entry.servingLabel}`,
+          totals: entryTotals(group.entry),
+          entryId: group.entry.id,
+          recipe: false,
+        }
+      : {
+          key: group.recipeId,
+          name: group.recipeName,
+          sub: `${group.entries.length} ingredients`,
+          totals: group.totals,
+          entryId: null,
+          recipe: true,
+        },
+  );
+}
+
+export function DayView({ date, foods, recipes, targets, entries }: DayViewProps) {
   const summary = summarizeDay(entries);
   return (
     <div className="flex flex-col gap-8">
@@ -67,6 +97,7 @@ export function DayView({ date, foods, targets, entries }: DayViewProps) {
       <TargetsProgress total={summary.total} targets={targets} />
 
       <LogFoodForm date={date} foods={foods} />
+      <LogRecipeForm date={date} recipes={recipes} />
 
       {summary.meals.length === 0 ? (
         <p className="text-sm text-muted-foreground">No food logged yet.</p>
@@ -83,28 +114,35 @@ export function DayView({ date, foods, targets, entries }: DayViewProps) {
                 </span>
               </div>
               <ul className="flex flex-col gap-1.5">
-                {meal.entries.map((entry) => (
+                {groupRows(groupMealEntries(meal.entries)).map((row) => (
                   <li
-                    key={entry.id}
+                    key={row.key}
                     className="group flex items-center justify-between gap-3 rounded-lg border bg-card px-3 py-2.5"
                   >
                     <div className="flex flex-col">
-                      <span className="text-sm">{entry.foodName}</span>
+                      <span className="text-sm">
+                        {row.name}
+                        {row.recipe && (
+                          <span className="ml-2 text-xs text-muted-foreground">recipe</span>
+                        )}
+                      </span>
                       <span className="text-xs text-muted-foreground tabular-nums">
-                        {entry.quantity} × {entry.servingLabel}
+                        {row.sub}
                       </span>
                     </div>
                     <div className="flex shrink-0 items-center gap-3 text-xs text-muted-foreground">
-                      <span className="tabular-nums">{macroLine(entryTotals(entry))}</span>
-                      <form action={removeEntryAction.bind(null, entry.id)}>
-                        <button
-                          type="submit"
-                          aria-label="Delete entry"
-                          className="flex opacity-0 transition-opacity hover:text-destructive focus-visible:opacity-100 group-hover:opacity-100"
-                        >
-                          <Trash2 className="size-4" />
-                        </button>
-                      </form>
+                      <span className="tabular-nums">{macroLine(row.totals)}</span>
+                      {row.entryId && (
+                        <form action={removeEntryAction.bind(null, row.entryId)}>
+                          <button
+                            type="submit"
+                            aria-label="Delete entry"
+                            className="flex opacity-0 transition-opacity hover:text-destructive focus-visible:opacity-100 group-hover:opacity-100"
+                          >
+                            <Trash2 className="size-4" />
+                          </button>
+                        </form>
+                      )}
                     </div>
                   </li>
                 ))}

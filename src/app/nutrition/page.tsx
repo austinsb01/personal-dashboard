@@ -1,4 +1,5 @@
 import { nutritionRepo } from "@/features/nutrition/repo";
+import { recipesRepo } from "@/features/recipes/repo";
 import { DayView } from "@/features/nutrition/components/day-view";
 import { settingsRepo } from "@/features/settings/repo";
 import { isIsoDate, todayIso } from "@/lib/iso-date";
@@ -13,13 +14,14 @@ export default async function NutritionPage({
   const params = await searchParams;
   const date = params.date && isIsoDate(params.date) ? params.date : todayIso();
 
-  const [foods, entries, targets] = await Promise.all([
+  const [foods, recipes, entries, targets] = await Promise.all([
     nutritionRepo.listFoods(),
+    recipesRepo.listRecipes(),
     nutritionRepo.listEntriesForDay(date),
     settingsRepo.getTargets(),
   ]);
 
   return (
-    <DayView date={date} foods={foods} targets={targets} entries={entries} />
+    <DayView date={date} foods={foods} recipes={recipes} targets={targets} entries={entries} />
   );
 }
