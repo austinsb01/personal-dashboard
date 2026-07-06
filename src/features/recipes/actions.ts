@@ -1,8 +1,8 @@
 "use server";
 
 // Server actions for recipes. Validates at the boundary, then delegates to the
-// repository. createRecipeAction/updateRecipeAction are useActionState-shaped;
-// the item rows are parsed out of indexed FormData fields.
+// repository. createRecipeAction is useActionState-shaped; the item rows are
+// parsed out of indexed FormData fields.
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -56,24 +56,6 @@ export async function createRecipeAction(
   } catch (error) {
     console.error("Failed to create recipe:", error);
     return { ok: false, errors: { form: ["Could not save the recipe. Is the name already used?"] } };
-  }
-  revalidatePath("/recipes");
-  return { ok: true };
-}
-
-export async function updateRecipeAction(
-  id: string,
-  _prev: RecipeFormState,
-  formData: FormData,
-): Promise<RecipeFormState> {
-  if (!idSchema.safeParse(id).success) return { ok: false, errors: { form: ["Invalid recipe."] } };
-  const parsed = parseRecipe(formData);
-  if (!parsed.success) return { ok: false, errors: z.flattenError(parsed.error).fieldErrors };
-  try {
-    await recipesRepo.updateRecipe(id, parsed.data);
-  } catch (error) {
-    console.error("Failed to update recipe:", error);
-    return { ok: false, errors: { form: ["Could not save the recipe."] } };
   }
   revalidatePath("/recipes");
   return { ok: true };

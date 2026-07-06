@@ -73,22 +73,6 @@ export const recipesRepo = {
     }
   },
 
-  // Updates a recipe's name/note and replaces its items in one insert. Foods are
-  // resolved before the update (the neon-http driver has no transactions).
-  async updateRecipe(id: string, input: RecipeInput) {
-    const items = await resolveItems(input);
-    await db
-      .update(recipes)
-      .set({ name: input.name, note: input.note ?? null })
-      .where(eq(recipes.id, id));
-    await db.delete(recipeItems).where(eq(recipeItems.recipeId, id));
-    if (items.length > 0) {
-      await db.insert(recipeItems).values(
-        items.map((item) => ({ recipeId: id, ...item })),
-      );
-    }
-  },
-
   // Deletes a recipe. Items cascade; logged entries keep their food and go
   // untagged (source_recipe_id set null).
   async deleteRecipe(id: string) {
