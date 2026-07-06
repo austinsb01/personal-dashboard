@@ -8,6 +8,8 @@ import {
   Target,
   Clock,
   Apple,
+  CalendarRange,
+  ChefHat,
   Droplet,
   Dumbbell,
   BarChart3,
@@ -45,6 +47,8 @@ export const NAV_GROUPS: readonly NavGroup[] = [
     label: "Nutrition",
     items: [
       { label: "Nutrition", href: "/nutrition", icon: Apple },
+      { label: "Recipes", href: "/recipes", icon: ChefHat },
+      { label: "Meal prep", href: "/meal-prep", icon: CalendarRange },
       { label: "Water", href: "/water", icon: Droplet },
     ],
   },
