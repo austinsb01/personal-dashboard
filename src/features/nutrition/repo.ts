@@ -5,6 +5,7 @@ import { asc, between, eq, sql } from "drizzle-orm";
 
 import { db } from "@/db/client";
 import { foods, mealEntries } from "./schema";
+import { recipes } from "../recipes/schema";
 import { findOrCreateFood } from "./foods";
 import type { LogEntryInput } from "./validation";
 
@@ -37,9 +38,12 @@ export const nutritionRepo = {
         proteinG: foods.proteinG,
         carbsG: foods.carbsG,
         fatG: foods.fatG,
+        sourceRecipeId: mealEntries.sourceRecipeId,
+        recipeName: recipes.name,
       })
       .from(mealEntries)
       .innerJoin(foods, eq(mealEntries.foodId, foods.id))
+      .leftJoin(recipes, eq(mealEntries.sourceRecipeId, recipes.id))
       .where(eq(mealEntries.loggedOn, loggedOn))
       .orderBy(asc(mealEntries.createdAt));
   },

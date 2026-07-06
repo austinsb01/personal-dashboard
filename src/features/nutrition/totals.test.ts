@@ -2,7 +2,7 @@
 
 import { describe, expect, it } from "vitest";
 
-import { entryTotals, summarizeDay, type DayEntry } from "./totals";
+import { entryTotals, groupMealEntries, summarizeDay, type DayEntry } from "./totals";
 
 function entry(over: Partial<DayEntry>): DayEntry {
   return {
@@ -15,6 +15,8 @@ function entry(over: Partial<DayEntry>): DayEntry {
     proteinG: 10,
     carbsG: 20,
     fatG: 5,
+    sourceRecipeId: null,
+    recipeName: null,
     ...over,
   };
 }
@@ -51,5 +53,26 @@ describe("summarizeDay", () => {
     const breakfast = summary.meals.find((m) => m.mealType === "breakfast");
     expect(breakfast?.totals.calories).toBe(500);
     expect(summary.total.calories).toBe(1000);
+  });
+});
+
+describe("groupMealEntries", () => {
+  it("keeps untagged foods as standalone groups", () => {
+    const groups = groupMealEntries([entry({ id: "a" }), entry({ id: "b" })]);
+    expect(groups).toHaveLength(2);
+    expect(groups.every((g) => g.kind === "food")).toBe(true);
+  });
+
+  it("collapses entries sharing a recipe into one recipe group with summed totals", () => {
+    const groups = groupMealEntries([
+      entry({ id: "a", sourceRecipeId: "r1", recipeName: "Chicken Bowl", calories: 200 }),
+      entry({ id: "b", sourceRecipeId: "r1", recipeName: "Chicken Bowl", calories: 300 }),
+      entry({ id: "c", foodName: "Apple", calories: 95 }),
+    ]);
+    expect(groups).toHaveLength(2);
+    const recipe = groups.find((g) => g.kind === "recipe");
+    expect(recipe?.kind === "recipe" && recipe.recipeName).toBe("Chicken Bowl");
+    expect(recipe?.kind === "recipe" && recipe.totals.calories).toBe(500);
+    expect(recipe?.kind === "recipe" && recipe.entries).toHaveLength(2);
   });
 });

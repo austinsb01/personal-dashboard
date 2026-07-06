@@ -14,6 +14,8 @@ export type DayEntry = {
   proteinG: number;
   carbsG: number;
   fatG: number;
+  sourceRecipeId: string | null;
+  recipeName: string | null;
 };
 
 export type Totals = {
@@ -71,4 +73,45 @@ export function summarizeDay(entries: DayEntry[]): DaySummary {
     return [{ mealType, entries: forMeal, totals: sumTotals(forMeal) }];
   });
   return { meals, total: sumTotals(entries) };
+}
+
+export type FoodGroup = { kind: "food"; entry: DayEntry };
+export type RecipeGroup = {
+  kind: "recipe";
+  recipeId: string;
+  recipeName: string;
+  entries: DayEntry[];
+  totals: Totals;
+};
+export type MealGroup = FoodGroup | RecipeGroup;
+
+// Collapses a meal's entries so those sharing a source recipe render as one
+// group (order preserved by first appearance); untagged foods stay standalone.
+export function groupMealEntries(entries: DayEntry[]): MealGroup[] {
+  const groups: MealGroup[] = [];
+  const byRecipe = new Map<string, RecipeGroup>();
+  for (const entry of entries) {
+    if (!entry.sourceRecipeId) {
+      groups.push({ kind: "food", entry });
+      continue;
+    }
+    const existing = byRecipe.get(entry.sourceRecipeId);
+    if (existing) {
+      existing.entries.push(entry);
+      continue;
+    }
+    const group: RecipeGroup = {
+      kind: "recipe",
+      recipeId: entry.sourceRecipeId,
+      recipeName: entry.recipeName ?? "Recipe",
+      entries: [entry],
+      totals: { calories: 0, proteinG: 0, carbsG: 0, fatG: 0 },
+    };
+    byRecipe.set(entry.sourceRecipeId, group);
+    groups.push(group);
+  }
+  for (const group of byRecipe.values()) {
+    group.totals = sumTotals(group.entries);
+  }
+  return groups;
 }
