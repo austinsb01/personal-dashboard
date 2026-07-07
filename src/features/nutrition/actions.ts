@@ -10,6 +10,8 @@ import { revalidatePath } from "next/cache";
 import { isIsoDate } from "@/lib/iso-date";
 import { logEntrySchema } from "./validation";
 import { nutritionRepo } from "./repo";
+import { logRecipeSchema } from "@/features/recipes/validation";
+import { recipesRepo } from "@/features/recipes/repo";
 
 const idSchema = z.uuid();
 
@@ -42,6 +44,37 @@ export async function logEntryAction(
     return { ok: false, errors: { form: ["Could not log the food."] } };
   }
   revalidatePath("/nutrition");
+  return { ok: true };
+}
+
+export async function logRecipeAction(
+  date: string,
+  _prev: NutritionFormState,
+  formData: FormData,
+): Promise<NutritionFormState> {
+  if (!isIsoDate(date)) return { ok: false, errors: { form: ["Invalid date."] } };
+  const parsed = logRecipeSchema.safeParse({
+    recipeId: formData.get("recipeId"),
+    mealType: formData.get("mealType"),
+    multiplier: formData.get("multiplier") || undefined,
+  });
+  if (!parsed.success) return { ok: false, errors: z.flattenError(parsed.error).fieldErrors };
+  try {
+    const recipe = await recipesRepo.findWithItems(parsed.data.recipeId);
+    if (!recipe) return { ok: false, errors: { form: ["That recipe no longer exists."] } };
+    await nutritionRepo.logRecipeEntries(
+      date,
+      parsed.data.mealType,
+      recipe.id,
+      recipe.items,
+      parsed.data.multiplier,
+    );
+  } catch (error) {
+    console.error("Failed to log recipe:", error);
+    return { ok: false, errors: { form: ["Could not log the recipe."] } };
+  }
+  revalidatePath("/nutrition");
+  revalidatePath("/meal-prep");
   return { ok: true };
 }
 

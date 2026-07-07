@@ -63,3 +63,8 @@ yarn-error.log*
 # Claude Code — local-only project instructions & memory
 CLAUDE.md
 .claude/
+
+# Superpowers brainstorming scratch (mockups, server state)
+.superpowers/
+docs/superpowers/specs/
+docs/superpowers/plans/

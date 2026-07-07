@@ -1,34 +1,13 @@
 // Typed data access for the nutrition feature. The only place its rows are read
-// or written. Foods are find-or-create by name (case-insensitive), so logging a
-// known food reuses its catalog row and stored macros.
+// or written. Food find-or-create lives in ./foods so recipes reuse it.
 
 import { asc, between, eq, sql } from "drizzle-orm";
 
 import { db } from "@/db/client";
 import { foods, mealEntries } from "./schema";
+import { recipes } from "../recipes/schema";
+import { findOrCreateFood } from "./foods";
 import type { LogEntryInput } from "./validation";
-
-// Returns the food row for a name (case-insensitive), creating it if needed.
-async function findOrCreateFood(input: LogEntryInput) {
-  const byName = sql`lower(${foods.name}) = lower(${input.name})`;
-  const [existing] = await db.select().from(foods).where(byName).limit(1);
-  if (existing) return existing;
-  const [created] = await db
-    .insert(foods)
-    .values({
-      name: input.name,
-      servingLabel: input.servingLabel,
-      calories: input.calories,
-      proteinG: input.proteinG,
-      carbsG: input.carbsG,
-      fatG: input.fatG,
-    })
-    .onConflictDoNothing()
-    .returning();
-  if (created) return created;
-  const [row] = await db.select().from(foods).where(byName).limit(1);
-  return row;
-}
 
 export const nutritionRepo = {
   // Full food catalog, for autocomplete and macro autofill.
@@ -59,9 +38,12 @@ export const nutritionRepo = {
         proteinG: foods.proteinG,
         carbsG: foods.carbsG,
         fatG: foods.fatG,
+        sourceRecipeId: mealEntries.sourceRecipeId,
+        recipeName: recipes.name,
       })
       .from(mealEntries)
       .innerJoin(foods, eq(mealEntries.foodId, foods.id))
+      .leftJoin(recipes, eq(mealEntries.sourceRecipeId, recipes.id))
       .where(eq(mealEntries.loggedOn, loggedOn))
       .orderBy(asc(mealEntries.createdAt));
   },
@@ -83,6 +65,31 @@ export const nutritionRepo = {
       .orderBy(asc(mealEntries.loggedOn));
   },
 
+  // Entries across a date window with food macros and any source-recipe name,
+  // for the weekly meal-prep view. Ordered by day then insertion.
+  listEntriesForRange(from: string, to: string) {
+    return db
+      .select({
+        id: mealEntries.id,
+        day: mealEntries.loggedOn,
+        mealType: mealEntries.mealType,
+        quantity: mealEntries.quantity,
+        foodName: foods.name,
+        servingLabel: foods.servingLabel,
+        calories: foods.calories,
+        proteinG: foods.proteinG,
+        carbsG: foods.carbsG,
+        fatG: foods.fatG,
+        sourceRecipeId: mealEntries.sourceRecipeId,
+        recipeName: recipes.name,
+      })
+      .from(mealEntries)
+      .innerJoin(foods, eq(mealEntries.foodId, foods.id))
+      .leftJoin(recipes, eq(mealEntries.sourceRecipeId, recipes.id))
+      .where(between(mealEntries.loggedOn, from, to))
+      .orderBy(asc(mealEntries.loggedOn), asc(mealEntries.createdAt));
+  },
+
   // Logs a food into a day's meal (find-or-creates the food).
   async logEntry(loggedOn: string, input: LogEntryInput) {
     const food = await findOrCreateFood(input);
@@ -92,6 +99,27 @@ export const nutritionRepo = {
       foodId: food.id,
       quantity: input.quantity,
     });
+  },
+
+  // Logs every item of a recipe into a day's meal, scaled by a whole multiplier,
+  // tagging each created entry with the source recipe.
+  async logRecipeEntries(
+    loggedOn: string,
+    mealTypeValue: LogEntryInput["mealType"],
+    sourceRecipeId: string,
+    items: { foodId: string; quantity: number }[],
+    multiplier: number,
+  ) {
+    if (items.length === 0) return;
+    await db.insert(mealEntries).values(
+      items.map((item) => ({
+        loggedOn,
+        mealType: mealTypeValue,
+        foodId: item.foodId,
+        quantity: item.quantity * multiplier,
+        sourceRecipeId,
+      })),
+    );
   },
 
   async removeEntry(id: string) {

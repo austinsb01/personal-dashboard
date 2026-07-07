@@ -14,6 +14,8 @@ import {
   pgEnum,
 } from "drizzle-orm/pg-core";
 
+import { recipes } from "../recipes/schema";
+
 export const mealType = pgEnum("meal_type", [
   "breakfast",
   "lunch",
@@ -44,6 +46,9 @@ export const mealEntries = pgTable(
       .notNull()
       .references(() => foods.id),
     quantity: real("quantity").notNull().default(1),
+    sourceRecipeId: uuid("source_recipe_id").references(() => recipes.id, {
+      onDelete: "set null",
+    }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [index("meal_entries_logged_on_idx").on(table.loggedOn)],

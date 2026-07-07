@@ -14,6 +14,7 @@ import {
   logEntryAction,
   type NutritionFormState,
 } from "@/features/nutrition/actions";
+import { FoodSuggestionsDatalist } from "@/features/nutrition/components/food-suggestions-datalist";
 import { MEAL_TYPES } from "@/features/nutrition/validation";
 
 export type FoodOption = {
@@ -111,11 +112,7 @@ export function LogFoodForm({
           className="min-w-40 flex-1"
           required
         />
-        <datalist id="food-suggestions">
-          {foods.map((food) => (
-            <option key={food.name} value={food.name} />
-          ))}
-        </datalist>
+        <FoodSuggestionsDatalist id="food-suggestions" foods={foods} />
         <Input name="quantity" type="number" min={0} step="0.25" defaultValue="1" aria-label="Servings" className="w-20" required />
       </div>
       <div className="flex flex-wrap items-center gap-2">
