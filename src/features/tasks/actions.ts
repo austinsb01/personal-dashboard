@@ -1,55 +1,67 @@
 "use server";
 
-// Server actions for tasks. Validates input at the boundary, then delegates to
-// the repository. Shaped for React's useActionState.
+// Server actions for tasks. Each validates its input at the boundary, delegates
+// to the repository, and returns a result the board can show on failure.
 
-import { z } from "zod";
 import { revalidatePath } from "next/cache";
 
-import { createTaskSchema } from "./validation";
+import { env } from "@/lib/env";
+import { todayIso } from "@/lib/iso-date";
+import { TASKS_PATH } from "./constants";
+import { isPastDay } from "./day-summary";
 import { tasksRepo } from "./repo";
+import { createTaskSchema, taskIdSchema, toggleTaskSchema } from "./validation";
 
-export type CreateTaskState = {
-  ok: boolean;
-  errors?: Record<string, string[] | undefined>;
-};
+export type TaskActionResult =
+  | { readonly ok: true }
+  | { readonly ok: false; readonly error: string };
 
-export async function createTaskAction(
-  _prevState: CreateTaskState,
-  formData: FormData,
-): Promise<CreateTaskState> {
-  const parsed = createTaskSchema.safeParse({
-    title: formData.get("title"),
-    priority: formData.get("priority") ?? undefined,
-    dueDate: formData.get("dueDate") || null,
-  });
+const INVALID_INPUT = {
+  ok: false,
+  error: "That did not look right. Please try again.",
+} as const satisfies TaskActionResult;
 
-  if (!parsed.success) {
-    return { ok: false, errors: z.flattenError(parsed.error).fieldErrors };
-  }
-
+// Runs a repository write, logs any failure, and refreshes the tasks page.
+async function runMutation(
+  failureMessage: string,
+  mutate: () => Promise<void>,
+): Promise<TaskActionResult> {
   try {
-    await tasksRepo.create(parsed.data);
+    await mutate();
   } catch (error) {
-    console.error("Failed to create task:", error);
-    return {
-      ok: false,
-      errors: { form: ["Could not create the task. Please try again."] },
-    };
+    console.error(failureMessage, error);
+    return { ok: false, error: failureMessage };
   }
-
-  revalidatePath("/tasks");
+  revalidatePath(TASKS_PATH);
   return { ok: true };
 }
 
-export async function toggleTaskAction(id: string, isCompleted: boolean) {
-  if (!z.uuid().safeParse(id).success) return;
-  await tasksRepo.setCompleted(id, isCompleted);
-  revalidatePath("/tasks");
+// Adds a task to a day. Tasks added to a past day are logged as already done.
+export async function createTaskAction(input: unknown): Promise<TaskActionResult> {
+  const parsed = createTaskSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, error: parsed.error.issues[0]?.message ?? INVALID_INPUT.error };
+  }
+  const isCompleted = isPastDay(parsed.data.day, todayIso(env.APP_TIME_ZONE));
+  return runMutation("Could not add the to-do. Please try again.", () =>
+    tasksRepo.create(parsed.data, isCompleted),
+  );
 }
 
-export async function deleteTaskAction(id: string) {
-  if (!z.uuid().safeParse(id).success) return;
-  await tasksRepo.remove(id);
-  revalidatePath("/tasks");
+// Marks a task done or not done on the day it is shown.
+export async function toggleTaskAction(input: unknown): Promise<TaskActionResult> {
+  const parsed = toggleTaskSchema.safeParse(input);
+  if (!parsed.success) return INVALID_INPUT;
+  return runMutation("Could not update the to-do. Please try again.", () =>
+    tasksRepo.setCompleted(parsed.data),
+  );
+}
+
+// Deletes a task.
+export async function deleteTaskAction(id: unknown): Promise<TaskActionResult> {
+  const parsed = taskIdSchema.safeParse(id);
+  if (!parsed.success) return INVALID_INPUT;
+  return runMutation("Could not delete the to-do. Please try again.", () =>
+    tasksRepo.remove(parsed.data),
+  );
 }
