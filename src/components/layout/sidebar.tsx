@@ -1,7 +1,7 @@
 "use client";
 
-// Primary sidebar navigation. Renders the Overview link plus collapsible
-// dropdown groups from the nav model, highlighting the active route.
+// Primary sidebar navigation. Renders the enabled pages as collapsible dropdown
+// groups from the nav model, highlighting the active route.
 
 import { useState } from "react";
 import Link from "next/link";
@@ -9,21 +9,12 @@ import { usePathname } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import {
-  NAV_OVERVIEW,
-  NAV_GROUPS,
-  type NavGroup,
-  type NavLeaf,
-} from "@/lib/navigation";
+import { NAV_GROUPS, type NavGroup, type NavLeaf } from "@/lib/navigation";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { LogoutButton } from "@/features/auth/components/logout-button";
 
-// Returns true when a nav href is the active route. The overview route ("/")
-// matches only an exact path; other routes also match their nested paths.
+// Returns true when a nav href is the active route or one of its nested paths.
 function isActiveRoute(href: string, pathname: string): boolean {
-  if (href === "/") {
-    return pathname === "/";
-  }
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -123,8 +114,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
         </span>
         <span className="text-sm font-semibold">Personal Dashboard</span>
       </div>
-      <NavRow item={NAV_OVERVIEW} pathname={pathname} onNavigate={onNavigate} />
-      <div className="mt-2 flex flex-col gap-2">
+      <div className="flex flex-col gap-2">
         {NAV_GROUPS.map((group) => (
           <CollapsibleGroup
             key={group.label}

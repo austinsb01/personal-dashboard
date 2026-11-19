@@ -4,8 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Personal Dashboard",
     short_name: "Dashboard",
-    description:
-      "Track to-dos and goals, time spent, gym workouts, and nutrition in one place.",
+    description: "A daily to-do list with a calendar of what got done.",
     start_url: "/",
     id: "/",
     scope: "/",

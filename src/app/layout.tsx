@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Personal Dashboard",
-  description: "Track tasks, goals, time, workouts, and nutrition in one place.",
+  description: "A daily to-do list with a calendar of what got done.",
   appleWebApp: {
     capable: true,
     title: "Dashboard",
