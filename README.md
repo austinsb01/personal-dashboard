@@ -1,7 +1,12 @@
 # Personal Dashboard
 
-A self-hosted personal dashboard to organize and track the things I care about: tasks,
-goals, time, workouts, nutrition, and water, in one place, accessible from any device.
+A self-hosted personal dashboard, currently focused on one thing I use every day: a to-do
+list organized by day, with a calendar that shows what got done. Accessible from any device.
+
+> Current focus: the app is stripped back to the to-do calendar. Goals, time, nutrition,
+> recipes, meal prep, water, workouts, analytics, and settings are hidden from the sidebar
+> but fully intact (routes, code, and tables); each comes back by flipping its `isEnabled`
+> flag in `src/lib/navigation.ts` when it is needed again.
 
 > Status: Installable PWA with a Notion-style design language. A collapsible blue-grey sidebar,
 > light and dark themes with a toggle, a polished app shell, and a web manifest, app icons,
@@ -29,14 +34,15 @@ water intake (per-day quick-add against a daily goal),
 
 | Area | What it does |
 | --- | --- |
-| To-do and goals | Tasks with priorities and due dates; longer-term goals with progress. |
-| Time tracking | Log time spent on activities; see daily totals and trends. |
-| Gym and workouts | Log exercises, sets, reps, and weights; track progression over time. |
-| Food and nutrition | Log meals with calories and macros; daily summaries against targets. |
-| Meal prep | Reusable recipes logged in one tap; a weekly ingredient rollup with macros against targets. |
-| Water | Quick-add water intake against a daily goal, with a progress bar. |
-| Analytics | Recharts trends across every area over a selectable 7/30/90-day window. |
-| Daily targets | A settings page to set water and nutrition goals, shown as progress bars and chart goal lines. |
+| To-do calendar | A month calendar tinted by how much got done each day; pick a day to see or add its to-dos. Unfinished items carry over to today. |
+| Goals (hidden) | Longer-term goals with progress. |
+| Time tracking (hidden) | Log time spent on activities; see daily totals and trends. |
+| Gym and workouts (hidden) | Log exercises, sets, reps, and weights; track progression over time. |
+| Food and nutrition (hidden) | Log meals with calories and macros; daily summaries against targets. |
+| Meal prep (hidden) | Reusable recipes logged in one tap; a weekly ingredient rollup with macros against targets. |
+| Water (hidden) | Quick-add water intake against a daily goal, with a progress bar. |
+| Analytics (hidden) | Recharts trends across every area over a selectable 7/30/90-day window. |
+| Daily targets (hidden) | A settings page to set water and nutrition goals, shown as progress bars and chart goal lines. |
 
 ## Tech Stack
 
@@ -96,6 +102,8 @@ Vercel Deployment Protection (no in-app login).
    Vercel auto-detects Next.js; no build configuration is needed.
 3. **Set the environment variable.** In the Vercel project settings, add
    `DATABASE_URL` (the Neon pooled string) for Production (and Preview if used).
+   Optionally add `APP_TIME_ZONE` (an IANA zone such as `America/New_York`) so the
+   to-do calendar's "today" matches your local day; it defaults to UTC.
    It is validated at startup by `src/lib/env.ts`, so a missing or malformed
    value fails the boot with a clear error.
 4. **Apply migrations.** The build does not touch the database (it stays
@@ -125,6 +133,7 @@ Vercel Deployment Protection (no in-app login).
 - [x] Phase 10, Water: a per-day water tracker under the Nutrition area (its own `water_entries` slice and `/water` page) with quick-add buttons (8/12/16 oz) and a custom amount, a daily total against a goal shown as a progress bar, and a deletable entries list. Adds a daily water-intake chart (with a goal reference line) to the analytics page.
 - [x] Phase 11, Daily targets: a `/settings` page to set daily targets (the water goal in oz, and calorie/protein/carbs/fat goals for nutrition), stored in a singleton `daily_targets` table. The water and nutrition day views show progress against these targets, and the nutrition analytics chart gains goal reference lines.
 - [x] Phase 12, Meal prep and ingredient grouping: reusable recipes (a named meal built from catalog foods) that log to a day in one action and appear grouped in the day view, plus a weekly `/meal-prep` view that rolls up a week's ingredients with total macros against daily targets and links each ingredient to the recipes and days that use it. Logging a recipe flattens into tagged `meal_entries`, so existing daily totals and analytics are unchanged. New `recipes` and `recipe_items` tables and a nullable `meal_entries.source_recipe_id`.
+- [x] Phase 14, To-do calendar focus: the app is narrowed to a day-based to-do list. A month calendar (heat-tinted by completed count, with a dot for open items) sits above the selected day's list and quick-add field; unfinished items carry over to today, past days read as a log of what was done, and changes apply optimistically. Adds `tasks.day` (migration `0009`), an optional `APP_TIME_ZONE` env var so "today" is correct outside UTC, and hides every other feature from the sidebar without removing it.
 - [ ] Phase 13, Polish and deploy (current): global UI consistency pass, PWA finalization, Vercel deploy, and Vercel deployment protection (password/SSO gate) to keep the app private without an in-app login.
 
 ## License

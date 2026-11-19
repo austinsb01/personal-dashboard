@@ -3,10 +3,26 @@
 
 import { z } from "zod";
 
+import { DEFAULT_TIME_ZONE } from "@/lib/iso-date";
+
+// True when the runtime recognizes the IANA time zone name.
+function isTimeZone(value: string): boolean {
+  try {
+    new Intl.DateTimeFormat(undefined, { timeZone: value });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 const envSchema = z.object({
   DATABASE_URL: z.url(),
   APP_PASSWORD: z.string().min(8, "APP_PASSWORD must be at least 8 characters"),
   AUTH_SECRET: z.string().min(16, "AUTH_SECRET must be at least 16 characters"),
+  APP_TIME_ZONE: z
+    .string()
+    .refine(isTimeZone, "APP_TIME_ZONE must be an IANA time zone name")
+    .default(DEFAULT_TIME_ZONE),
 });
 
 // Parses process.env against the schema; fails fast with readable errors.

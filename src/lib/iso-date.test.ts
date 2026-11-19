@@ -2,7 +2,14 @@
 
 import { describe, expect, it } from "vitest";
 
-import { addDays, formatDay, formatDayShort, isIsoDate, todayIso } from "./iso-date";
+import {
+  addDays,
+  formatDay,
+  formatDayLong,
+  formatDayShort,
+  isIsoDate,
+  todayIso,
+} from "./iso-date";
 
 describe("isIsoDate", () => {
   it("accepts a well-formed YYYY-MM-DD string", () => {
@@ -47,8 +54,29 @@ describe("formatDayShort", () => {
   });
 });
 
+describe("formatDayLong", () => {
+  it("formats an ISO day as a full weekday and month", () => {
+    expect(formatDayLong("2026-06-29")).toBe("Monday, June 29");
+  });
+});
+
 describe("todayIso", () => {
   it("returns a valid ISO day string", () => {
     expect(isIsoDate(todayIso())).toBe(true);
+  });
+
+  it("defaults to the UTC calendar day", () => {
+    const now = new Date("2026-11-20T03:00:00Z");
+    expect(todayIso(undefined, now)).toBe("2026-11-20");
+  });
+
+  it("returns the calendar day in the given time zone", () => {
+    const now = new Date("2026-11-20T03:00:00Z");
+    expect(todayIso("America/Chicago", now)).toBe("2026-11-19");
+  });
+
+  it("rolls forward for zones ahead of UTC", () => {
+    const now = new Date("2026-12-31T20:00:00Z");
+    expect(todayIso("Asia/Tokyo", now)).toBe("2027-01-01");
   });
 });

@@ -8,7 +8,9 @@ colors. Build a primitive once here and compose it across features.
 
 - `button.tsx` - the `Button` primitive with variants (default, outline, ghost,
   secondary, destructive, link) and sizes.
+- `input.tsx` - the text `Input` primitive.
 - `card.tsx` - `Card` and its parts (`CardHeader`, `CardTitle`, `CardDescription`).
+- `progress-bar.tsx` - thin progress bar that fills to a 0 to 1 fraction.
 - `select.tsx` - native `<select>` styled to match `Input`.
 - `separator.tsx` - thin divider line.
 - `theme-toggle.tsx` - light/dark toggle backed by `next-themes`; mounted in the
