@@ -7,7 +7,10 @@ schemas), and `components/` (UI).
 
 ## Contents
 
-- `tasks/` - to-do tasks: priorities, due dates, and completion state.
+Only `tasks/` is currently linked in the sidebar. The other features are hidden
+(see `isEnabled` in `src/lib/navigation.ts`) but fully intact.
+
+- `tasks/` - the to-do list by day: a month calendar with the selected day's list below, carry-over of unfinished items, and a per-day heat indicator. The only feature currently shown in the app.
 - `goals/` - longer-term goals: progress, optional description and target date.
 - `time/` - time tracking: a start/stop timer over free-text activities.
 - `workouts/` - gym and workouts: per-day view, reusable day types and exercises, sets, and cardio.
